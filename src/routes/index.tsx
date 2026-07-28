@@ -320,15 +320,15 @@ function BrandStrip() {
 
 function About() {
   const stats = [
-    { v: "+10", l: "anos de experiência" },
-    { v: "+500", l: "clientes atendidos" },
-    { v: "+100k", l: "entregas realizadas" },
+    { v: "1994", l: "no mercado desde" },
+    { v: "+21", l: "anos em cargas aéreas" },
+    { v: "+15", l: "anos como gerente de cargas" },
     { v: "BR", l: "cobertura nacional" },
   ];
   return (
     <section id="sobre" className="py-24 lg:py-32 relative overflow-hidden">
       <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none" />
-      <div className="relative mx-auto max-w-7xl px-6 grid lg:grid-cols-2 gap-16 items-center">
+      <div className="relative mx-auto max-w-7xl px-6 grid lg:grid-cols-2 gap-16 items-start">
         <Reveal>
           <div className="relative">
             <div className="absolute -top-6 -left-6 h-32 w-32 rounded-2xl bg-accent/10 animate-float" />
@@ -354,31 +354,54 @@ function About() {
         </Reveal>
 
         <Reveal delay={150}>
-          <span className="text-accent font-semibold text-sm tracking-widest uppercase">Sobre a Empresa</span>
-          <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-primary">
-            Movendo mercadorias.<br />Construindo confiança.
+          <span className="text-accent font-semibold text-sm tracking-widest uppercase">Sobre a LKR</span>
+          <h2 className="mt-3 text-3xl lg:text-4xl font-extrabold text-primary leading-tight">
+            Experiência que conhece o caminho.<br />Compromisso que faz a carga chegar.
           </h2>
-          <p className="mt-6 text-muted-foreground leading-relaxed">
-            A LKR Serviços nasceu com o propósito de transformar o transporte no Brasil, unindo tecnologia,
-            experiência e uma equipe altamente qualificada. Ao longo de mais de uma década, construímos uma
-            operação sólida que atende empresas de todos os portes com agilidade e segurança.
-          </p>
-          <p className="mt-4 text-muted-foreground leading-relaxed">
-            Nosso compromisso é entregar mais do que cargas — entregamos previsibilidade, cuidado e resultados
-            para o seu negócio.
-          </p>
-
-          <div className="mt-10 grid grid-cols-2 gap-5">
-            {stats.map((s, i) => (
-              <Reveal key={s.l} delay={200 + i * 80}>
-                <div className="rounded-xl border border-border bg-card p-5 card-hover">
-                  <div className="text-3xl font-extrabold text-primary font-display">{s.v}</div>
-                  <div className="text-sm text-muted-foreground mt-1">{s.l}</div>
-                </div>
-              </Reveal>
-            ))}
+          <div className="mt-6 space-y-4 text-muted-foreground leading-relaxed">
+            <p>
+              A LKR Serviços iniciou suas atividades em 1994, prestando serviços de distribuição e entregas
+              para empresas de transporte de cargas. Há mais de três décadas, construímos uma trajetória
+              marcada por experiência, responsabilidade e dedicação em cada operação.
+            </p>
+            <p>
+              Nossa história nasceu de uma sólida experiência no segmento de cargas aéreas, adquirida em
+              empresas reconhecidas como Varig e TAM Cargo. São mais de 21 anos de atuação nesse mercado,
+              incluindo 15 anos na função de gerente de cargas. Esse conhecimento se tornou a base para
+              compreender profundamente os desafios das transportadoras e oferecer soluções seguras, ágeis
+              e eficientes.
+            </p>
+            <p>
+              Hoje, utilizamos toda essa experiência para atender transportadoras e operadores logísticos
+              de diferentes regiões do território nacional. Trabalhamos como uma verdadeira extensão da
+              operação de nossos clientes, cuidando de cada encomenda com atenção, transparência e
+              compromisso com os prazos.
+            </p>
+            <p>
+              Investimos continuamente em tecnologia, rastreamento, processos operacionais e qualificação
+              da nossa equipe. Nosso objetivo é oferecer confiança em todas as etapas, desde a coleta até a
+              entrega no destino final.
+            </p>
+            <p>
+              Mais do que transportar cargas, ajudamos empresas a manter seus compromissos e seus negócios
+              em movimento.
+            </p>
           </div>
+          <p className="mt-6 border-l-4 border-accent pl-4 text-primary font-semibold italic">
+            LKR Serviços — experiência que gera confiança, logística que entrega resultados.
+          </p>
         </Reveal>
+      </div>
+
+      <div className="relative mx-auto max-w-7xl px-6 mt-16 grid grid-cols-2 lg:grid-cols-4 gap-5">
+        {stats.map((s, i) => (
+          <Reveal key={s.l} delay={i * 80}>
+            <div className="rounded-xl border border-border bg-card p-5 card-hover text-center">
+              <div className="text-3xl font-extrabold text-primary font-display">{s.v}</div>
+              <div className="text-sm text-muted-foreground mt-1">{s.l}</div>
+            </div>
+          </Reveal>
+        ))}
       </div>
     </section>
   );
