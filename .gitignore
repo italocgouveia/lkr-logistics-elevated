@@ -20,6 +20,15 @@ dist-ssr
 .wrangler/
 .dev.vars
 
+# Netlify build output
+.netlify/
+
+# Fotos de origem (não usadas diretamente pelo site)
+img/
+
+# Este projeto usa bun.lock como lockfile
+package-lock.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

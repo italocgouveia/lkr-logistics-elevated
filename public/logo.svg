@@ -1,0 +1,45 @@
+<svg viewBox="0 0 540 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="lkr-red" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF1E1E" />
+      <stop offset="100%" stop-color="#C90000" />
+    </linearGradient>
+    <linearGradient id="lkr-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#000DC4" />
+      <stop offset="100%" stop-color="#000475" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="2" dy="3" stdDeviation="2" flood-color="#000040" flood-opacity="0.25" />
+    </filter>
+  </defs>
+
+  <!-- Red Orbit Swoosh (Back) -->
+  <path d="M 440 65 C 475 75, 470 120, 420 180 C 315 310, 140 400, 50 410 C 25 412, 15 390, 35 355 C 85 260, 220 145, 345 75 C 400 45, 425 55, 440 65 Z" fill="url(#lkr-red)" />
+
+  <!-- Blue Orbit Swoosh (Front/Outer) -->
+  <path d="M 485 45 C 505 10, 415 25, 305 75 C 175 135, 15 255, 2 355 C -8 415, 35 440, 105 430 C 235 410, 375 335, 465 225 C 490 190, 475 85, 485 45 Z M 12 375 C 22 300, 145 190, 275 125 C 375 75, 460 40, 455 65 C 445 100, 355 180, 235 255 C 125 325, 25 385, 12 375 Z" fill="url(#lkr-blue)" />
+
+  <!-- Red Triangle -->
+  <polygon points="240,10 155,240 325,240" fill="url(#lkr-red)" filter="url(#shadow)" />
+
+  <!-- Letter L -->
+  <path d="M 110 140 L 170 135 L 135 265 L 225 260 L 220 290 L 105 295 Z" fill="url(#lkr-blue)" filter="url(#shadow)" />
+
+  <!-- Letter K -->
+  <g filter="url(#shadow)">
+    <path d="M 180 75 L 250 70 L 200 235 L 175 235 Z" fill="url(#lkr-blue)" />
+    <path d="M 220 150 L 280 120 L 300 130 L 240 175 Z" fill="url(#lkr-blue)" />
+    <path d="M 227 165 L 265 235 L 235 235 L 205 180 Z" fill="url(#lkr-blue)" />
+  </g>
+
+  <!-- Letter R -->
+  <g filter="url(#shadow)">
+    <path d="M 240 235 L 310 230 C 330 230, 340 240, 335 260 C 330 275, 315 285, 290 287 L 320 355 L 285 355 L 260 290 L 245 290 L 230 355 L 205 355 Z M 250 255 L 245 275 L 285 273 C 295 273, 303 267, 305 260 C 307 253, 300 251, 287 253 Z" fill="url(#lkr-blue)" />
+  </g>
+
+  <!-- "Serviços" text -->
+  <text x="85" y="340" font-family="'Arial Black', Arial, sans-serif" font-weight="900" font-size="44" fill="#000475">Serviços</text>
+
+  <!-- Subtext: TRANSPORTES & LOGÍSTICA INTEGRADA -->
+  <text x="270" y="480" font-family="'Arial Black', Arial, sans-serif" font-weight="900" font-size="21" fill="#000475" text-anchor="middle" letter-spacing="0.5">TRANSPORTES &amp; LOGÍSTICA INTEGRADA</text>
+</svg>

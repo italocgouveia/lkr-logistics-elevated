@@ -1,0 +1,8 @@
+[build]
+  command = "bun run build"
+  publish = "dist"
+
+[build.environment]
+  # Faz o Nitro (TanStack Start) compilar para o Netlify em vez do Cloudflare.
+  # Gera o estático em dist/ e a função SSR em .netlify/functions-internal/.
+  SERVER_PRESET = "netlify"

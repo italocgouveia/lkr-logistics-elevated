@@ -1,0 +1,39 @@
+<svg viewBox="0 0 500 460" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="lkr-red-fav" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF1E1E" />
+      <stop offset="100%" stop-color="#C90000" />
+    </linearGradient>
+    <linearGradient id="lkr-blue-fav" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#000DC4" />
+      <stop offset="100%" stop-color="#000475" />
+    </linearGradient>
+  </defs>
+
+  <!-- Outer Blue Orbit Swoosh -->
+  <path d="M 490 60 C 510 10, 420 30, 310 80 C 180 140, 20 260, 5 360 C -5 420, 40 445, 110 435 C 240 415, 380 340, 470 230 C 495 195, 480 90, 490 60 Z M 15 385 C 25 310, 150 200, 280 135 C 380 85, 465 50, 460 75 C 450 110, 360 190, 240 265 C 130 335, 30 395, 15 385 Z" fill="url(#lkr-blue-fav)" />
+
+  <!-- Inner Red Orbit Swoosh -->
+  <path d="M 470 70 C 480 85, 475 120, 430 175 C 330 300, 160 390, 70 400 C 35 405, 30 380, 50 345 C 100 255, 230 150, 350 85 C 420 48, 460 55, 470 70 Z" fill="url(#lkr-red-fav)" opacity="0.95" />
+
+  <!-- Red Triangle -->
+  <polygon points="245,15 160,245 330,245" fill="url(#lkr-red-fav)" />
+
+  <!-- Letter L -->
+  <path d="M 115 145 L 175 140 L 140 270 L 230 265 L 225 295 L 110 300 Z" fill="url(#lkr-blue-fav)" />
+
+  <!-- Letter K -->
+  <g>
+    <path d="M 185 80 L 255 75 L 205 240 L 180 240 Z" fill="url(#lkr-blue-fav)" />
+    <path d="M 225 155 L 285 125 L 305 135 L 245 180 Z" fill="url(#lkr-blue-fav)" />
+    <path d="M 232 170 L 270 240 L 240 240 L 210 185 Z" fill="url(#lkr-blue-fav)" />
+  </g>
+
+  <!-- Letter R -->
+  <g>
+    <path d="M 245 240 L 315 235 C 335 235, 345 245, 340 265 C 335 280, 320 290, 295 292 L 325 360 L 290 360 L 265 295 L 250 295 L 235 360 L 210 360 Z M 255 260 L 250 280 L 290 278 C 300 278, 308 272, 310 265 C 312 258, 305 256, 292 258 Z" fill="url(#lkr-blue-fav)" />
+  </g>
+
+  <!-- "Serviços" text -->
+  <text x="90" y="350" font-family="'Arial Black', Arial, sans-serif" font-weight="bold" font-size="46" fill="#000475">Serviços</text>
+</svg>

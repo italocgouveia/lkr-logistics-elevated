@@ -3,10 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import {
   Truck, ShieldCheck, Clock, MapPin, Phone, Mail, MessageCircle,
   Package, Route as RouteIcon, Boxes, Warehouse, Send, LineChart,
-  Users, Star, ArrowRight, CheckCircle2, Menu, X, Facebook, Instagram, Linkedin,
+  Users, Star, ArrowRight, CheckCircle2, Menu, X, Facebook, Instagram, Linkedin, Plane,
 } from "lucide-react";
 import heroImg from "@/assets/hero-truck.jpg";
-import fleetImg from "@/assets/fleet-trucks.jpg";
+import sedeImg from "@/assets/sede-lkr.jpg";
+import { LkrLogo } from "../components/LkrLogo";
 
 export const Route = createFileRoute("/")({
   component: Landing,
@@ -50,6 +51,7 @@ const NAV = [
   { label: "Home", href: "#home" },
   { label: "Sobre", href: "#sobre" },
   { label: "Serviços", href: "#servicos" },
+  { label: "Estrutura", href: "#estrutura" },
   { label: "Diferenciais", href: "#diferenciais" },
   { label: "Contato", href: "#contato" },
 ];
@@ -71,6 +73,7 @@ function Landing() {
       <About />
       <Services />
       <Differentiators />
+      <Estrutura />
       <Process />
       <Stats />
       <Testimonials />
@@ -89,14 +92,11 @@ function Navbar({ scrolled, menuOpen, setMenuOpen }: { scrolled: boolean; menuOp
       }`}
     >
       <div className="mx-auto max-w-7xl px-6 h-20 flex items-center justify-between">
-        <a href="#home" className="flex items-center gap-2">
-          <div className="h-10 w-10 rounded-lg grid place-items-center" style={{ background: "var(--gradient-primary)" }}>
-            <Truck className="h-5 w-5 text-white" />
-          </div>
-          <div className={`font-display font-extrabold text-lg leading-none ${scrolled ? "text-primary" : "text-white"}`}>
-            LKR<span className="text-accent">.</span>
-            <div className="text-[10px] font-medium tracking-widest opacity-80 mt-1">SERVIÇOS</div>
-          </div>
+        <a href="#home" className="flex items-center group">
+          <LkrLogo
+            variant="icon"
+            className={`h-14 w-auto transition-all group-hover:scale-105 ${scrolled ? "" : "drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)]"}`}
+          />
         </a>
 
         <nav className="hidden lg:flex items-center gap-8">
@@ -151,10 +151,10 @@ function Hero() {
     <section id="home" className="relative min-h-screen flex items-center overflow-hidden">
       <img
         src={heroImg}
-        alt="Caminhão em rodovia ao pôr do sol"
+        alt="Caminhão LKR em rodovia e avião de carga ao pôr do sol"
         className="absolute inset-0 w-full h-full object-cover"
         width={1920}
-        height={1200}
+        height={1280}
       />
       <div className="absolute inset-0" style={{ background: "var(--gradient-hero)" }} />
 
@@ -178,7 +178,7 @@ function Hero() {
             <a href="#contato" className="btn-primary">
               Solicitar Orçamento <ArrowRight className="h-4 w-4" />
             </a>
-            <a href="https://wa.me/5500000000000" target="_blank" rel="noopener noreferrer" className="btn-outline">
+            <a href="https://wa.me/553432291736?text=Ol%C3%A1!%20Gostaria%20de%20solicitar%20um%20or%C3%A7amento%20com%20a%20LKR%20Servi%C3%A7os." target="_blank" rel="noopener noreferrer" className="btn-outline">
               <MessageCircle className="h-4 w-4" /> Falar no WhatsApp
             </a>
           </div>
@@ -216,8 +216,8 @@ function About() {
           <div className="absolute -top-6 -left-6 h-32 w-32 rounded-2xl bg-accent/10" />
           <div className="absolute -bottom-6 -right-6 h-40 w-40 rounded-2xl" style={{ background: "var(--gradient-primary)", opacity: 0.1 }} />
           <img
-            src={fleetImg}
-            alt="Frota moderna de caminhões LKR"
+            src={sedeImg}
+            alt="Sede da LKR Serviços em Uberlândia - MG"
             className="relative rounded-2xl shadow-2xl w-full h-[500px] object-cover"
             loading="lazy"
             width={1400}
@@ -262,6 +262,7 @@ function Services() {
     { icon: Clock, t: "Coletas Programadas", d: "Roteiros recorrentes com pontualidade garantida." },
     { icon: Boxes, t: "Transporte Fracionado", d: "Otimização de custos para cargas menores." },
     { icon: Package, t: "Transporte Dedicado", d: "Frota exclusiva para sua empresa." },
+    { icon: Plane, t: "Transporte Aéreo", d: "Cargas expressas com agilidade para todo o Brasil." },
     { icon: Warehouse, t: "Armazenagem", d: "Estrutura segura para estocagem e preparação." },
     { icon: LineChart, t: "Gestão Logística", d: "Indicadores e tecnologia para decisões melhores." },
   ];
@@ -278,18 +279,27 @@ function Services() {
           </p>
         </div>
 
-        <div className="mt-16 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="mt-16 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {items.map((s) => (
-            <div key={s.t} className="group rounded-2xl bg-card border border-border p-6 card-hover">
-              <div className="h-12 w-12 rounded-xl grid place-items-center" style={{ background: "var(--gradient-primary)" }}>
-                <s.icon className="h-6 w-6 text-white" />
+            <a
+              key={s.t}
+              href="#contato"
+              className="group relative flex flex-col overflow-hidden rounded-2xl bg-card border border-border p-7 card-hover hover:border-accent/40"
+            >
+              <span className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-accent transition-transform duration-300 group-hover:scale-x-100" />
+              <div
+                className="h-14 w-14 rounded-2xl grid place-items-center shadow-md transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3"
+                style={{ background: "var(--gradient-primary)" }}
+              >
+                <s.icon className="h-7 w-7 text-white" />
               </div>
-              <h3 className="mt-5 font-bold text-lg text-primary">{s.t}</h3>
-              <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{s.d}</p>
-              <div className="mt-5 flex items-center gap-1 text-accent text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-                Saiba mais <ArrowRight className="h-4 w-4" />
+              <h3 className="mt-6 font-bold text-xl text-primary">{s.t}</h3>
+              <p className="mt-2 flex-1 text-sm text-muted-foreground leading-relaxed">{s.d}</p>
+              <div className="mt-6 inline-flex items-center gap-2 text-accent text-sm font-semibold">
+                Solicitar orçamento
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>
@@ -330,6 +340,55 @@ function Differentiators() {
               </div>
               <h3 className="mt-5 font-semibold">{i.t}</h3>
             </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Estrutura() {
+  const photos = [
+    { src: "/estrutura/sede.jpg", t: "Nossa sede", d: "Uberlândia - MG" },
+    { src: "/estrutura/frota.jpg", t: "Frota própria", d: "Veículos para entrega e distribuição" },
+    { src: "/estrutura/armazem.jpg", t: "Armazenagem", d: "Porta-paletes e estoque organizado" },
+    { src: "/estrutura/camara-refrigerada.jpg", t: "Câmara refrigerada", d: "Temperatura controlada de 2 a 8°C" },
+    { src: "/estrutura/congelados.jpg", t: "Câmara de congelados", d: "Cadeia de frio para cargas sensíveis" },
+    { src: "/estrutura/monitoramento.jpg", t: "Central de monitoramento", d: "Acompanhamento das operações" },
+    { src: "/estrutura/sac.jpg", t: "SAC Operacional", d: "Atendimento dedicado ao cliente" },
+    { src: "/estrutura/operacao.jpg", t: "Expedição", d: "Preparação e conferência de cargas" },
+  ];
+  return (
+    <section id="estrutura" className="py-24 lg:py-32">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="text-center max-w-2xl mx-auto">
+          <span className="text-accent font-semibold text-sm tracking-widest uppercase">Nossa Estrutura</span>
+          <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-primary">
+            Uma operação real, feita para entregar
+          </h2>
+          <p className="mt-4 text-muted-foreground">
+            Sede própria, frota, armazenagem e cadeia de frio em Uberlândia - MG.
+          </p>
+        </div>
+
+        <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {photos.map((p) => (
+            <figure
+              key={p.src}
+              className="group relative overflow-hidden rounded-2xl border border-border shadow-sm"
+            >
+              <img
+                src={p.src}
+                alt={p.t}
+                loading="lazy"
+                className="h-64 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
+              <figcaption className="absolute inset-x-0 bottom-0 p-5">
+                <div className="font-bold text-white">{p.t}</div>
+                <div className="text-xs text-white/80">{p.d}</div>
+              </figcaption>
+            </figure>
           ))}
         </div>
       </div>
@@ -396,9 +455,14 @@ function Stats() {
 
 function Testimonials() {
   const items = [
-    { n: "Carla Menezes", r: "Diretora de Operações, TechFoods", t: "A LKR transformou nossa distribuição. Prazos consistentes e comunicação impecável." },
-    { n: "Rafael Souza", r: "Gerente Logístico, IndustriMax", t: "Frota moderna e equipe altamente profissional. Recomendo sem hesitar." },
-    { n: "Marina Alves", r: "Supply Chain, Vale Verde", t: "Rastreamento em tempo real que realmente funciona. Tranquilidade para a operação." },
+    { n: "Daniela Moreira", r: "Avaliação no Google", t: "Melhor transportadora de Uberlândia, entregas dentro do prazo. Eficiência e um excelente atendimento" },
+    { n: "fred neves", r: "Avaliação no Google", t: "Melhor transportadora da cidade eficiência rapidez é um ótimo atendimento ao cliente recomendo" },
+    { n: "Rafael Santos", r: "Avaliação no Google", t: "uma empresa muito seria e comprometida com os prazo e informações.. top..demais" },
+    { n: "Alessandra Mendes Klovrva", r: "Local Guide no Google", t: "Empresa séria, organizada e que cuida de tudo dos clientes" },
+    { n: "Wagner Borges de Souza", r: "Avaliação no Google", t: "De uma responsabilidade e um comprometimento 100% positivo" },
+    { n: "Dagmarjordao Vargas", r: "Avaliação no Google", t: "Empresa eficiente, atende com muita presteza e agilidade." },
+    { n: "Sávio olimpio", r: "Local Guide no Google", t: "Bom atendimento e entrega rápida" },
+    { n: "Fernando Queiroz", r: "Local Guide no Google", t: "Pessoal atende bem, são bem profissionais." },
   ];
   const [i, setI] = useState(0);
   useEffect(() => {
@@ -413,6 +477,18 @@ function Testimonials() {
           <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-primary">
             Quem confia na LKR
           </h2>
+          <a
+            href="https://www.google.com/maps/place/LKR+Servi%C3%A7os+Transportes+e+Log%C3%ADstica"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-5 inline-flex items-center gap-2 rounded-full bg-card border border-border px-4 py-2 shadow-sm hover:-translate-y-0.5 transition-transform"
+          >
+            <span className="flex text-accent">
+              {Array.from({ length: 5 }).map((_, k) => <Star key={k} className="h-4 w-4 fill-current" />)}
+            </span>
+            <span className="font-bold text-primary">4,6</span>
+            <span className="text-sm text-muted-foreground">no Google</span>
+          </a>
         </div>
 
         <div className="mt-14 relative">
@@ -476,11 +552,23 @@ function Contact() {
         <div className="grid lg:grid-cols-2 gap-10 items-stretch">
           <div className="rounded-2xl overflow-hidden border border-border shadow-sm min-h-[500px] relative bg-surface">
             <iframe
-              title="Mapa LKR"
-              src="https://www.openstreetmap.org/export/embed.html?bbox=-46.65%2C-23.60%2C-46.60%2C-23.55&layer=mapnik"
+              title="Mapa LKR — R. Prof. Mario Godói, 587, Santa Mônica, Uberlândia - MG"
+              src="https://www.openstreetmap.org/export/embed.html?bbox=-48.2266%2C-18.9346%2C-48.2166%2C-18.9266&layer=mapnik&marker=-18.9306357%2C-48.221656"
               className="w-full h-full absolute inset-0"
               loading="lazy"
             />
+            <a
+              href="https://www.google.com/maps/place/LKR+Servi%C3%A7os+Transportes+e+Log%C3%ADstica"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="absolute bottom-4 left-4 right-4 rounded-xl bg-card/95 backdrop-blur border border-border px-4 py-3 shadow-lg flex items-start gap-3 hover:-translate-y-0.5 transition-transform"
+            >
+              <MapPin className="h-5 w-5 text-accent mt-0.5 shrink-0" />
+              <div>
+                <div className="font-bold text-primary text-sm">LKR Serviços Transportes e Logística</div>
+                <div className="text-xs text-muted-foreground">R. Prof. Mario Godói, 587 — Santa Mônica, Uberlândia - MG, 38408-332</div>
+              </div>
+            </a>
           </div>
 
           <div className="rounded-2xl bg-card border border-border p-8 lg:p-10 shadow-sm">
@@ -501,9 +589,9 @@ function Contact() {
             </form>
 
             <div className="mt-8 pt-8 border-t border-border grid grid-cols-3 gap-3">
-              <QuickAction icon={MessageCircle} label="WhatsApp" href="https://wa.me/5500000000000" />
-              <QuickAction icon={Phone} label="Telefone" href="tel:+5500000000000" />
-              <QuickAction icon={Mail} label="Email" href="mailto:contato@lkr.com.br" />
+              <QuickAction icon={MessageCircle} label="WhatsApp" href="https://wa.me/553432291736?text=Ol%C3%A1!%20Gostaria%20de%20solicitar%20um%20or%C3%A7amento%20com%20a%20LKR%20Servi%C3%A7os." />
+              <QuickAction icon={Phone} label="Telefone" href="tel:+553432291736" />
+              <QuickAction icon={Mail} label="Email" href="mailto:comercial@lkrservicos.com.br" />
             </div>
           </div>
         </div>
@@ -537,13 +625,13 @@ function Footer() {
     <footer className="text-white/80" style={{ background: "linear-gradient(180deg, oklch(0.22 0.15 268), oklch(0.16 0.12 268))" }}>
       <div className="mx-auto max-w-7xl px-6 py-16 grid lg:grid-cols-4 gap-10">
         <div>
-          <div className="flex items-center gap-2">
-            <div className="h-10 w-10 rounded-lg bg-accent grid place-items-center">
-              <Truck className="h-5 w-5 text-white" />
-            </div>
-            <div className="font-display font-extrabold text-white text-lg">LKR<span className="text-accent">.</span></div>
+          <div className="inline-flex rounded-xl bg-white px-5 py-4 shadow-lg">
+            <LkrLogo variant="full" className="h-20 w-auto" />
           </div>
-          <p className="mt-4 text-sm text-white/70 leading-relaxed">
+          <p className="mt-4 inline-flex items-center gap-2 text-sm font-semibold tracking-wide text-accent">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" /> Deus é fiel
+          </p>
+          <p className="mt-3 text-sm text-white/70 leading-relaxed">
             Transportes & Logística Integrada. Movendo o Brasil com segurança, tecnologia e credibilidade.
           </p>
           <div className="mt-6 flex gap-3">
@@ -577,9 +665,9 @@ function Footer() {
         <div>
           <h4 className="text-white font-semibold mb-4">Contato</h4>
           <ul className="space-y-3 text-sm">
-            <li className="flex items-center gap-2"><Phone className="h-4 w-4 text-accent" /> (00) 0000-0000</li>
-            <li className="flex items-center gap-2"><Mail className="h-4 w-4 text-accent" /> contato@lkr.com.br</li>
-            <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-accent" /> Brasil — Cobertura Nacional</li>
+            <li className="flex items-center gap-2"><Phone className="h-4 w-4 text-accent" /> (34) 3229-1736</li>
+            <li className="flex items-center gap-2"><Mail className="h-4 w-4 text-accent" /> comercial@lkrservicos.com.br</li>
+            <li className="flex items-start gap-2"><MapPin className="h-4 w-4 text-accent mt-0.5 shrink-0" /> R. Prof. Mario Godói, 587 — Santa Mônica, Uberlândia - MG, 38408-332</li>
             <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-accent" /> Seg–Sex, 8h às 18h</li>
           </ul>
         </div>
@@ -587,7 +675,7 @@ function Footer() {
       <div className="border-t border-white/10">
         <div className="mx-auto max-w-7xl px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/60">
           <div>© {new Date().getFullYear()} LKR Serviços. Todos os direitos reservados.</div>
-          <div>CNPJ 00.000.000/0001-00</div>
+          <div>CNPJ 03.527.759/0001-15</div>
         </div>
       </div>
     </footer>
