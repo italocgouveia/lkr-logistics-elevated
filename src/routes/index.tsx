@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   Truck, ShieldCheck, Clock, MapPin, Phone, Mail, MessageCircle,
   Package, Route as RouteIcon, Boxes, Warehouse, Send, LineChart,
   Users, Star, ArrowRight, CheckCircle2, Menu, X, Facebook, Instagram, Linkedin, Plane,
+  ArrowUp, Sparkles,
 } from "lucide-react";
 import heroImg from "@/assets/hero-truck.jpg";
 import sedeImg from "@/assets/sede-lkr.jpg";
@@ -12,6 +13,8 @@ import { LkrLogo } from "../components/LkrLogo";
 export const Route = createFileRoute("/")({
   component: Landing,
 });
+
+/* ---------- Hooks ---------- */
 
 function useCountUp(target: number, start: boolean, duration = 1800) {
   const [value, setValue] = useState(0);
@@ -31,7 +34,7 @@ function useCountUp(target: number, start: boolean, duration = 1800) {
   return value;
 }
 
-function useInView<T extends HTMLElement>() {
+function useInView<T extends HTMLElement>(threshold = 0.2) {
   const ref = useRef<T | null>(null);
   const [inView, setInView] = useState(false);
   useEffect(() => {
@@ -39,13 +42,41 @@ function useInView<T extends HTMLElement>() {
     if (!el) return;
     const io = new IntersectionObserver(
       ([e]) => e.isIntersecting && setInView(true),
-      { threshold: 0.25 },
+      { threshold },
     );
     io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [threshold]);
   return { ref, inView };
 }
+
+/* ---------- Reveal wrapper ---------- */
+
+function Reveal({
+  children,
+  delay = 0,
+  as: Tag = "div",
+  className = "",
+}: {
+  children: ReactNode;
+  delay?: number;
+  as?: keyof React.JSX.IntrinsicElements;
+  className?: string;
+}) {
+  const { ref, inView } = useInView<HTMLDivElement>(0.15);
+  const Comp = Tag as React.ElementType;
+  return (
+    <Comp
+      ref={ref}
+      className={`reveal ${inView ? "reveal-in" : ""} ${className}`}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      {children}
+    </Comp>
+  );
+}
+
+/* ---------- Data ---------- */
 
 const NAV = [
   { label: "Home", href: "#home" },
@@ -56,20 +87,42 @@ const NAV = [
   { label: "Contato", href: "#contato" },
 ];
 
+const BRANDS = ["ANTT", "Omnilink", "Cadeia de Frio", "Cross Docking", "LKR Farma", "Transporte Aéreo", "Rastreamento", "Cobertura Nacional"];
+
+/* ---------- Main ---------- */
+
 function Landing() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [showTop, setShowTop] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll);
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 40);
+      setShowTop(y > 600);
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      setProgress(h > 0 ? (y / h) * 100 : 0);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      {/* Scroll progress bar */}
+      <div className="fixed top-0 inset-x-0 z-[60] h-[3px] bg-transparent">
+        <div
+          className="h-full bg-accent transition-[width] duration-150 ease-out"
+          style={{ width: `${progress}%`, boxShadow: "0 0 12px oklch(0.6 0.24 27 / 0.7)" }}
+        />
+      </div>
+
       <Navbar scrolled={scrolled} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
       <Hero />
+      <BrandStrip />
       <About />
       <Services />
       <Differentiators />
@@ -80,18 +133,42 @@ function Landing() {
       <CtaBanner />
       <Contact />
       <Footer />
+
+      {/* Floating WhatsApp */}
+      <a
+        href="https://wa.me/553432291736?text=Ol%C3%A1!%20Gostaria%20de%20solicitar%20um%20or%C3%A7amento%20com%20a%20LKR%20Servi%C3%A7os."
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Falar no WhatsApp"
+        className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-accent grid place-items-center text-white shadow-lg animate-pulse-ring hover:scale-110 transition-transform"
+      >
+        <MessageCircle className="h-6 w-6" />
+      </a>
+
+      {/* Back to top */}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        aria-label="Voltar ao topo"
+        className={`fixed bottom-24 right-6 z-50 h-11 w-11 rounded-full bg-primary text-white grid place-items-center shadow-md transition-all duration-300 ${
+          showTop ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3 pointer-events-none"
+        }`}
+      >
+        <ArrowUp className="h-5 w-5" />
+      </button>
     </div>
   );
 }
 
+/* ---------- Navbar ---------- */
+
 function Navbar({ scrolled, menuOpen, setMenuOpen }: { scrolled: boolean; menuOpen: boolean; setMenuOpen: (v: boolean) => void }) {
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-white/95 backdrop-blur-md shadow-sm" : "bg-transparent"
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
+        scrolled ? "bg-white/90 backdrop-blur-xl shadow-sm border-b border-border" : "bg-transparent"
       }`}
     >
-      <div className="mx-auto max-w-7xl px-6 h-20 flex items-center justify-between">
+      <div className={`mx-auto max-w-7xl px-6 flex items-center justify-between transition-all duration-500 ${scrolled ? "h-16" : "h-20"}`}>
         <a href="#home" className="flex items-center group">
           <LkrLogo
             variant="icon"
@@ -104,7 +181,7 @@ function Navbar({ scrolled, menuOpen, setMenuOpen }: { scrolled: boolean; menuOp
             <a
               key={n.href}
               href={n.href}
-              className={`text-sm font-medium transition-colors ${
+              className={`relative text-sm font-medium transition-colors after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-accent after:transition-all hover:after:w-full ${
                 scrolled ? "text-foreground/80 hover:text-primary" : "text-white/90 hover:text-white"
               }`}
             >
@@ -126,8 +203,12 @@ function Navbar({ scrolled, menuOpen, setMenuOpen }: { scrolled: boolean; menuOp
         </button>
       </div>
 
-      {menuOpen && (
-        <div className="lg:hidden bg-white border-t border-border px-6 py-4 space-y-3">
+      <div
+        className={`lg:hidden overflow-hidden bg-white border-t border-border transition-[max-height,opacity] duration-500 ${
+          menuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="px-6 py-4 space-y-3">
           {NAV.map((n) => (
             <a key={n.href} href={n.href} onClick={() => setMenuOpen(false)} className="block text-sm font-medium py-2">
               {n.label}
@@ -135,10 +216,12 @@ function Navbar({ scrolled, menuOpen, setMenuOpen }: { scrolled: boolean; menuOp
           ))}
           <a href="#contato" onClick={() => setMenuOpen(false)} className="btn-primary w-full">Solicitar Orçamento</a>
         </div>
-      )}
+      </div>
     </header>
   );
 }
+
+/* ---------- Hero ---------- */
 
 function Hero() {
   const chips = [
@@ -149,34 +232,37 @@ function Hero() {
   ];
   return (
     <section id="home" className="relative min-h-screen flex items-center overflow-hidden">
-      <img
-        src={heroImg}
-        alt="Caminhão LKR em rodovia e avião de carga ao pôr do sol"
-        className="absolute inset-0 w-full h-full object-cover"
-        width={1920}
-        height={1280}
-      />
+      <div className="absolute inset-0 overflow-hidden">
+        <img
+          src={heroImg}
+          alt="Caminhão LKR em rodovia e avião de carga ao pôr do sol"
+          className="absolute inset-0 w-full h-full object-cover animate-kenburns"
+          width={1920}
+          height={1280}
+        />
+      </div>
       <div className="absolute inset-0" style={{ background: "var(--gradient-hero)" }} />
 
+      {/* Floating orbs */}
+      <div className="pointer-events-none absolute -top-24 -left-24 h-96 w-96 rounded-full bg-accent/25 blur-3xl animate-float" />
+      <div className="pointer-events-none absolute bottom-0 right-0 h-[28rem] w-[28rem] rounded-full bg-primary/40 blur-3xl animate-float" style={{ animationDelay: "1.2s" }} />
+
       <div className="relative z-10 mx-auto max-w-7xl px-6 pt-32 pb-20 w-full">
-        <div className="max-w-3xl fade-up">
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-4 py-1.5 text-white text-xs font-medium mb-6">
-            <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+        <div className="max-w-3xl">
+          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-4 py-1.5 text-white text-xs font-medium mb-6 fade-up">
+            <Sparkles className="h-3.5 w-3.5 text-accent" />
             Transportes & Logística Integrada
           </div>
-          <h1 className="text-white font-extrabold text-4xl sm:text-5xl lg:text-7xl leading-[1.05]">
+          <h1 className="text-white font-extrabold text-4xl sm:text-5xl lg:text-7xl leading-[1.05] fade-up" style={{ animationDelay: "0.1s" }}>
             Transportando seu negócio com{" "}
-            <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(90deg, #fff, #ff6b70)" }}>
-              segurança e eficiência
-            </span>
-            .
+            <span className="text-shimmer">segurança e eficiência</span>.
           </h1>
-          <p className="mt-6 text-lg text-white/85 max-w-2xl">
+          <p className="mt-6 text-lg text-white/85 max-w-2xl fade-up" style={{ animationDelay: "0.25s" }}>
             Soluções completas em transporte e logística para empresas de todo o Brasil.
           </p>
-          <div className="mt-8 flex flex-wrap gap-4">
-            <a href="#contato" className="btn-primary">
-              Solicitar Orçamento <ArrowRight className="h-4 w-4" />
+          <div className="mt-8 flex flex-wrap gap-4 fade-up" style={{ animationDelay: "0.4s" }}>
+            <a href="#contato" className="btn-primary group">
+              Solicitar Orçamento <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </a>
             <a href="https://wa.me/553432291736?text=Ol%C3%A1!%20Gostaria%20de%20solicitar%20um%20or%C3%A7amento%20com%20a%20LKR%20Servi%C3%A7os." target="_blank" rel="noopener noreferrer" className="btn-outline">
               <MessageCircle className="h-4 w-4" /> Falar no WhatsApp
@@ -185,10 +271,11 @@ function Hero() {
         </div>
 
         <div className="mt-16 grid grid-cols-2 lg:grid-cols-4 gap-3 max-w-4xl">
-          {chips.map((c) => (
+          {chips.map((c, i) => (
             <div
               key={c.label}
-              className="rounded-xl bg-white/10 backdrop-blur-md border border-white/15 p-4 flex items-center gap-3 hover:bg-white/15 transition-colors"
+              className="rounded-xl bg-white/10 backdrop-blur-md border border-white/15 p-4 flex items-center gap-3 hover:bg-white/20 hover:-translate-y-1 hover:border-white/30 transition-all fade-up"
+              style={{ animationDelay: `${0.5 + i * 0.1}s` }}
             >
               <div className="h-10 w-10 rounded-lg bg-accent/90 grid place-items-center shrink-0">
                 <c.icon className="h-5 w-5 text-white" />
@@ -198,9 +285,38 @@ function Hero() {
           ))}
         </div>
       </div>
+
+      {/* Scroll cue */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-2 text-white/70">
+        <span className="text-[10px] tracking-[0.25em] uppercase">Scroll</span>
+        <div className="h-8 w-[1px] bg-white/40 relative overflow-hidden">
+          <div className="absolute inset-x-0 top-0 h-3 bg-accent animate-[float-y_1.8s_ease-in-out_infinite]" />
+        </div>
+      </div>
     </section>
   );
 }
+
+/* ---------- Brand strip ---------- */
+
+function BrandStrip() {
+  const items = [...BRANDS, ...BRANDS];
+  return (
+    <section className="border-y border-border bg-surface py-8 overflow-hidden">
+      <div className="mask-fade-x">
+        <div className="flex gap-16 whitespace-nowrap animate-marquee w-max">
+          {items.map((b, i) => (
+            <div key={i} className="text-primary/60 font-display font-extrabold text-2xl tracking-tight hover:text-primary transition-colors">
+              {b}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- About ---------- */
 
 function About() {
   const stats = [
@@ -210,22 +326,34 @@ function About() {
     { v: "BR", l: "cobertura nacional" },
   ];
   return (
-    <section id="sobre" className="py-24 lg:py-32">
-      <div className="mx-auto max-w-7xl px-6 grid lg:grid-cols-2 gap-16 items-center">
-        <div className="relative">
-          <div className="absolute -top-6 -left-6 h-32 w-32 rounded-2xl bg-accent/10" />
-          <div className="absolute -bottom-6 -right-6 h-40 w-40 rounded-2xl" style={{ background: "var(--gradient-primary)", opacity: 0.1 }} />
-          <img
-            src={sedeImg}
-            alt="Sede da LKR Serviços em Uberlândia - MG"
-            className="relative rounded-2xl shadow-2xl w-full h-[500px] object-cover"
-            loading="lazy"
-            width={1400}
-            height={1000}
-          />
-        </div>
+    <section id="sobre" className="py-24 lg:py-32 relative overflow-hidden">
+      <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none" />
+      <div className="relative mx-auto max-w-7xl px-6 grid lg:grid-cols-2 gap-16 items-center">
+        <Reveal>
+          <div className="relative">
+            <div className="absolute -top-6 -left-6 h-32 w-32 rounded-2xl bg-accent/10 animate-float" />
+            <div className="absolute -bottom-6 -right-6 h-40 w-40 rounded-2xl animate-float" style={{ background: "var(--gradient-primary)", opacity: 0.12, animationDelay: "1s" }} />
+            <img
+              src={sedeImg}
+              alt="Sede da LKR Serviços em Uberlândia - MG"
+              className="relative rounded-2xl shadow-2xl w-full h-[500px] object-cover"
+              loading="lazy"
+              width={1400}
+              height={1000}
+            />
+            <div className="absolute -bottom-6 left-6 bg-white rounded-xl shadow-lg border border-border px-5 py-4 flex items-center gap-3">
+              <div className="h-10 w-10 rounded-lg bg-accent grid place-items-center">
+                <ShieldCheck className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <div className="text-xs text-muted-foreground">Credenciada</div>
+                <div className="font-bold text-primary text-sm">ANTT · Omnilink</div>
+              </div>
+            </div>
+          </div>
+        </Reveal>
 
-        <div>
+        <Reveal delay={150}>
           <span className="text-accent font-semibold text-sm tracking-widest uppercase">Sobre a Empresa</span>
           <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-primary">
             Movendo mercadorias.<br />Construindo confiança.
@@ -241,18 +369,22 @@ function About() {
           </p>
 
           <div className="mt-10 grid grid-cols-2 gap-5">
-            {stats.map((s) => (
-              <div key={s.l} className="rounded-xl border border-border bg-card p-5 card-hover">
-                <div className="text-3xl font-extrabold text-primary font-display">{s.v}</div>
-                <div className="text-sm text-muted-foreground mt-1">{s.l}</div>
-              </div>
+            {stats.map((s, i) => (
+              <Reveal key={s.l} delay={200 + i * 80}>
+                <div className="rounded-xl border border-border bg-card p-5 card-hover">
+                  <div className="text-3xl font-extrabold text-primary font-display">{s.v}</div>
+                  <div className="text-sm text-muted-foreground mt-1">{s.l}</div>
+                </div>
+              </Reveal>
             ))}
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );
 }
+
+/* ---------- Services ---------- */
 
 function Services() {
   const items = [
@@ -267,45 +399,51 @@ function Services() {
     { icon: LineChart, t: "Gestão Logística", d: "Indicadores e tecnologia para decisões melhores." },
   ];
   return (
-    <section id="servicos" className="py-24 lg:py-32 bg-surface">
+    <section id="servicos" className="py-24 lg:py-32 bg-surface relative">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="text-center max-w-2xl mx-auto">
-          <span className="text-accent font-semibold text-sm tracking-widest uppercase">Nossos Serviços</span>
-          <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-primary">
-            Soluções logísticas completas
-          </h2>
-          <p className="mt-4 text-muted-foreground">
-            Uma linha de serviços desenhada para acompanhar cada etapa da sua cadeia de suprimentos.
-          </p>
-        </div>
+        <Reveal>
+          <div className="text-center max-w-2xl mx-auto">
+            <span className="text-accent font-semibold text-sm tracking-widest uppercase">Nossos Serviços</span>
+            <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-primary">
+              Soluções logísticas completas
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              Uma linha de serviços desenhada para acompanhar cada etapa da sua cadeia de suprimentos.
+            </p>
+          </div>
+        </Reveal>
 
         <div className="mt-16 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {items.map((s) => (
-            <a
-              key={s.t}
-              href="#contato"
-              className="group relative flex flex-col overflow-hidden rounded-2xl bg-card border border-border p-7 card-hover hover:border-accent/40"
-            >
-              <span className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-accent transition-transform duration-300 group-hover:scale-x-100" />
-              <div
-                className="h-14 w-14 rounded-2xl grid place-items-center shadow-md transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3"
-                style={{ background: "var(--gradient-primary)" }}
+          {items.map((s, i) => (
+            <Reveal key={s.t} delay={i * 70}>
+              <a
+                href="#contato"
+                className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-card border border-border p-7 tilt-card hover:border-accent/40"
               >
-                <s.icon className="h-7 w-7 text-white" />
-              </div>
-              <h3 className="mt-6 font-bold text-xl text-primary">{s.t}</h3>
-              <p className="mt-2 flex-1 text-sm text-muted-foreground leading-relaxed">{s.d}</p>
-              <div className="mt-6 inline-flex items-center gap-2 text-accent text-sm font-semibold">
-                Solicitar orçamento
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </div>
-            </a>
+                <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-accent/10 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <span className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-accent transition-transform duration-300 group-hover:scale-x-100" />
+                <div
+                  className="relative h-14 w-14 rounded-2xl grid place-items-center shadow-md transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
+                  style={{ background: "var(--gradient-primary)" }}
+                >
+                  <s.icon className="h-7 w-7 text-white" />
+                </div>
+                <h3 className="relative mt-6 font-bold text-xl text-primary">{s.t}</h3>
+                <p className="relative mt-2 flex-1 text-sm text-muted-foreground leading-relaxed">{s.d}</p>
+                <div className="relative mt-6 inline-flex items-center gap-2 text-accent text-sm font-semibold">
+                  Solicitar orçamento
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </div>
+              </a>
+            </Reveal>
           ))}
         </div>
       </div>
     </section>
   );
 }
+
+/* ---------- Differentiators ---------- */
 
 function Differentiators() {
   const items = [
@@ -321,25 +459,31 @@ function Differentiators() {
   return (
     <section id="diferenciais" className="py-24 lg:py-32 relative overflow-hidden text-white" style={{ background: "var(--gradient-primary)" }}>
       <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, white 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+      <div className="pointer-events-none absolute -top-40 right-0 h-96 w-96 rounded-full bg-accent/30 blur-3xl animate-float" />
+
       <div className="relative mx-auto max-w-7xl px-6">
-        <div className="max-w-2xl">
-          <span className="text-accent font-semibold text-sm tracking-widest uppercase">Diferenciais</span>
-          <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold">
-            Por que empresas escolhem a LKR
-          </h2>
-          <p className="mt-4 text-white/75">
-            Um padrão de operação pensado para eliminar surpresas e entregar performance.
-          </p>
-        </div>
+        <Reveal>
+          <div className="max-w-2xl">
+            <span className="text-accent font-semibold text-sm tracking-widest uppercase">Diferenciais</span>
+            <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold">
+              Por que empresas escolhem a LKR
+            </h2>
+            <p className="mt-4 text-white/75">
+              Um padrão de operação pensado para eliminar surpresas e entregar performance.
+            </p>
+          </div>
+        </Reveal>
 
         <div className="mt-16 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {items.map((i) => (
-            <div key={i.t} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-6 hover:bg-white/10 hover:-translate-y-1 transition-all">
-              <div className="h-11 w-11 rounded-xl bg-accent grid place-items-center">
-                <i.icon className="h-5 w-5 text-white" />
+          {items.map((i, k) => (
+            <Reveal key={i.t} delay={k * 60}>
+              <div className="group rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-6 hover:bg-white/10 hover:-translate-y-1.5 hover:border-white/30 transition-all h-full">
+                <div className="h-11 w-11 rounded-xl bg-accent grid place-items-center transition-transform group-hover:scale-110 group-hover:rotate-6">
+                  <i.icon className="h-5 w-5 text-white" />
+                </div>
+                <h3 className="mt-5 font-semibold">{i.t}</h3>
               </div>
-              <h3 className="mt-5 font-semibold">{i.t}</h3>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>
@@ -396,28 +540,40 @@ function Estrutura() {
   );
 }
 
+/* ---------- Process ---------- */
+
 function Process() {
   const steps = ["Solicitação", "Planejamento", "Coleta", "Transporte", "Entrega", "Confirmação"];
+  const { ref, inView } = useInView<HTMLDivElement>(0.3);
   return (
     <section className="py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="text-center max-w-2xl mx-auto">
-          <span className="text-accent font-semibold text-sm tracking-widest uppercase">Como Trabalhamos</span>
-          <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-primary">
-            Um processo claro do início ao fim
-          </h2>
-        </div>
+        <Reveal>
+          <div className="text-center max-w-2xl mx-auto">
+            <span className="text-accent font-semibold text-sm tracking-widest uppercase">Como Trabalhamos</span>
+            <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-primary">
+              Um processo claro do início ao fim
+            </h2>
+          </div>
+        </Reveal>
 
-        <div className="mt-16 relative">
-          <div className="hidden lg:block absolute top-8 left-[8%] right-[8%] h-px bg-border" />
+        <div ref={ref} className="mt-16 relative">
+          <div className="hidden lg:block absolute top-8 left-[8%] right-[8%] h-[2px] bg-border" />
+          {inView && (
+            <div
+              className="hidden lg:block absolute top-8 left-[8%] right-[8%] h-[2px] bg-gradient-to-r from-primary via-accent to-primary animate-progress"
+            />
+          )}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
             {steps.map((s, i) => (
-              <div key={s} className="relative flex flex-col items-center text-center">
-                <div className="relative h-16 w-16 rounded-full bg-card border-2 border-primary grid place-items-center shadow-sm">
-                  <span className="text-primary font-extrabold">{String(i + 1).padStart(2, "0")}</span>
+              <Reveal key={s} delay={i * 120}>
+                <div className="relative flex flex-col items-center text-center">
+                  <div className="relative h-16 w-16 rounded-full bg-card border-2 border-primary grid place-items-center shadow-sm hover:scale-110 hover:border-accent transition-all">
+                    <span className="text-primary font-extrabold">{String(i + 1).padStart(2, "0")}</span>
+                  </div>
+                  <div className="mt-4 font-semibold text-primary">{s}</div>
                 </div>
-                <div className="mt-4 font-semibold text-primary">{s}</div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -425,6 +581,8 @@ function Process() {
     </section>
   );
 }
+
+/* ---------- Stats ---------- */
 
 function StatCounter({ target, suffix, label, start }: { target: number; suffix: string; label: string; start: boolean }) {
   const value = useCountUp(target, start);
@@ -442,8 +600,14 @@ function StatCounter({ target, suffix, label, start }: { target: number; suffix:
 function Stats() {
   const { ref, inView } = useInView<HTMLDivElement>();
   return (
-    <section ref={ref} className="py-24 relative overflow-hidden" style={{ background: "linear-gradient(135deg, oklch(0.18 0.12 268), oklch(0.26 0.16 268))" }}>
-      <div className="mx-auto max-w-7xl px-6 grid grid-cols-2 lg:grid-cols-4 gap-10">
+    <section
+      ref={ref}
+      className="py-24 relative overflow-hidden"
+      style={{ background: "linear-gradient(135deg, oklch(0.18 0.12 268), oklch(0.26 0.16 268))" }}
+    >
+      <div className="pointer-events-none absolute -top-40 -left-40 h-[30rem] w-[30rem] rounded-full bg-accent/20 blur-3xl animate-float" />
+      <div className="pointer-events-none absolute -bottom-40 -right-40 h-[30rem] w-[30rem] rounded-full bg-primary/40 blur-3xl animate-float" style={{ animationDelay: "1.5s" }} />
+      <div className="relative mx-auto max-w-7xl px-6 grid grid-cols-2 lg:grid-cols-4 gap-10">
         <StatCounter target={500} suffix="+" label="Clientes" start={inView} />
         <StatCounter target={100000} suffix="+" label="Entregas" start={inView} />
         <StatCounter target={27} suffix="" label="Estados atendidos" start={inView} />
@@ -452,6 +616,8 @@ function Stats() {
     </section>
   );
 }
+
+/* ---------- Testimonials ---------- */
 
 function Testimonials() {
   const items = [
@@ -466,134 +632,154 @@ function Testimonials() {
   ];
   const [i, setI] = useState(0);
   useEffect(() => {
-    const t = setInterval(() => setI((v) => (v + 1) % items.length), 5000);
+    const t = setInterval(() => setI((v) => (v + 1) % items.length), 5500);
     return () => clearInterval(t);
   }, [items.length]);
   return (
     <section className="py-24 lg:py-32 bg-surface">
       <div className="mx-auto max-w-5xl px-6">
-        <div className="text-center max-w-2xl mx-auto">
-          <span className="text-accent font-semibold text-sm tracking-widest uppercase">Depoimentos</span>
-          <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-primary">
-            Quem confia na LKR
-          </h2>
-          <a
-            href="https://www.google.com/maps/place/LKR+Servi%C3%A7os+Transportes+e+Log%C3%ADstica"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-5 inline-flex items-center gap-2 rounded-full bg-card border border-border px-4 py-2 shadow-sm hover:-translate-y-0.5 transition-transform"
-          >
-            <span className="flex text-accent">
-              {Array.from({ length: 5 }).map((_, k) => <Star key={k} className="h-4 w-4 fill-current" />)}
-            </span>
-            <span className="font-bold text-primary">4,6</span>
-            <span className="text-sm text-muted-foreground">no Google</span>
-          </a>
-        </div>
-
-        <div className="mt-14 relative">
-          <div className="rounded-2xl bg-card border border-border shadow-lg p-10 lg:p-14 text-center">
-            <div className="flex justify-center gap-1 text-accent mb-6">
-              {Array.from({ length: 5 }).map((_, k) => <Star key={k} className="h-5 w-5 fill-current" />)}
-            </div>
-            <p className="text-xl lg:text-2xl font-medium text-foreground leading-relaxed">
-              “{items[i].t}”
-            </p>
-            <div className="mt-8">
-              <div className="font-bold text-primary">{items[i].n}</div>
-              <div className="text-sm text-muted-foreground">{items[i].r}</div>
-            </div>
-          </div>
-          <div className="mt-6 flex justify-center gap-2">
-            {items.map((_, k) => (
-              <button
-                key={k}
-                onClick={() => setI(k)}
-                className={`h-2 rounded-full transition-all ${k === i ? "w-8 bg-accent" : "w-2 bg-border"}`}
-                aria-label={`Depoimento ${k + 1}`}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function CtaBanner() {
-  return (
-    <section className="py-20" style={{ background: "linear-gradient(120deg, oklch(0.55 0.24 27), oklch(0.62 0.24 22))" }}>
-      <div className="mx-auto max-w-6xl px-6 flex flex-col lg:flex-row items-center justify-between gap-8">
-        <div className="text-white text-center lg:text-left">
-          <h2 className="text-3xl lg:text-4xl font-extrabold">
-            Precisa de uma solução logística para sua empresa?
-          </h2>
-          <p className="mt-3 text-white/90">Nossa equipe está pronta para desenhar a operação ideal para você.</p>
-        </div>
-        <a href="#contato" className="inline-flex items-center gap-2 bg-white text-accent font-bold px-8 py-4 rounded-xl shadow-lg hover:-translate-y-0.5 transition-transform">
-          Solicitar orçamento <ArrowRight className="h-5 w-5" />
-        </a>
-      </div>
-    </section>
-  );
-}
-
-function Contact() {
-  return (
-    <section id="contato" className="py-24 lg:py-32">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="text-accent font-semibold text-sm tracking-widest uppercase">Contato</span>
-          <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-primary">
-            Vamos conversar sobre sua operação
-          </h2>
-        </div>
-
-        <div className="grid lg:grid-cols-2 gap-10 items-stretch">
-          <div className="rounded-2xl overflow-hidden border border-border shadow-sm min-h-[500px] relative bg-surface">
-            <iframe
-              title="Mapa LKR — R. Prof. Mario Godói, 587, Santa Mônica, Uberlândia - MG"
-              src="https://www.openstreetmap.org/export/embed.html?bbox=-48.2266%2C-18.9346%2C-48.2166%2C-18.9266&layer=mapnik&marker=-18.9306357%2C-48.221656"
-              className="w-full h-full absolute inset-0"
-              loading="lazy"
-            />
+        <Reveal>
+          <div className="text-center max-w-2xl mx-auto">
+            <span className="text-accent font-semibold text-sm tracking-widest uppercase">Depoimentos</span>
+            <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-primary">
+              Quem confia na LKR
+            </h2>
             <a
               href="https://www.google.com/maps/place/LKR+Servi%C3%A7os+Transportes+e+Log%C3%ADstica"
               target="_blank"
               rel="noopener noreferrer"
-              className="absolute bottom-4 left-4 right-4 rounded-xl bg-card/95 backdrop-blur border border-border px-4 py-3 shadow-lg flex items-start gap-3 hover:-translate-y-0.5 transition-transform"
+              className="mt-5 inline-flex items-center gap-2 rounded-full bg-card border border-border px-4 py-2 shadow-sm hover:-translate-y-0.5 transition-transform"
             >
-              <MapPin className="h-5 w-5 text-accent mt-0.5 shrink-0" />
-              <div>
-                <div className="font-bold text-primary text-sm">LKR Serviços Transportes e Logística</div>
-                <div className="text-xs text-muted-foreground">R. Prof. Mario Godói, 587 — Santa Mônica, Uberlândia - MG, 38408-332</div>
-              </div>
+              <span className="flex text-accent">
+                {Array.from({ length: 5 }).map((_, k) => <Star key={k} className="h-4 w-4 fill-current" />)}
+              </span>
+              <span className="font-bold text-primary">4,6</span>
+              <span className="text-sm text-muted-foreground">no Google</span>
             </a>
           </div>
+        </Reveal>
 
-          <div className="rounded-2xl bg-card border border-border p-8 lg:p-10 shadow-sm">
-            <form className="grid grid-cols-1 sm:grid-cols-2 gap-4" onSubmit={(e) => e.preventDefault()}>
-              <Field label="Nome" placeholder="Seu nome" />
-              <Field label="Empresa" placeholder="Sua empresa" />
-              <Field label="Telefone" placeholder="(00) 00000-0000" />
-              <Field label="Email" placeholder="voce@empresa.com" type="email" />
-              <div className="sm:col-span-2">
-                <label className="text-sm font-medium text-foreground">Mensagem</label>
-                <textarea rows={4} placeholder="Conte-nos sobre sua necessidade logística..." className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary transition-colors" />
+        <Reveal delay={150}>
+          <div className="mt-14 relative">
+            <div className="rounded-2xl bg-card border border-border shadow-lg p-10 lg:p-14 text-center overflow-hidden">
+              <div key={i} className="fade-up">
+                <div className="flex justify-center gap-1 text-accent mb-6">
+                  {Array.from({ length: 5 }).map((_, k) => <Star key={k} className="h-5 w-5 fill-current" />)}
+                </div>
+                <p className="text-xl lg:text-2xl font-medium text-foreground leading-relaxed">
+                  “{items[i].t}”
+                </p>
+                <div className="mt-8">
+                  <div className="font-bold text-primary">{items[i].n}</div>
+                  <div className="text-sm text-muted-foreground">{items[i].r}</div>
+                </div>
               </div>
-              <div className="sm:col-span-2">
-                <button type="submit" className="btn-primary w-full">
-                  Enviar mensagem <ArrowRight className="h-4 w-4" />
-                </button>
-              </div>
-            </form>
-
-            <div className="mt-8 pt-8 border-t border-border grid grid-cols-3 gap-3">
-              <QuickAction icon={MessageCircle} label="WhatsApp" href="https://wa.me/553432291736?text=Ol%C3%A1!%20Gostaria%20de%20solicitar%20um%20or%C3%A7amento%20com%20a%20LKR%20Servi%C3%A7os." />
-              <QuickAction icon={Phone} label="Telefone" href="tel:+553432291736" />
-              <QuickAction icon={Mail} label="Email" href="mailto:comercial@lkrservicos.com.br" />
+            </div>
+            <div className="mt-6 flex justify-center gap-2">
+              {items.map((_, k) => (
+                <button
+                  key={k}
+                  onClick={() => setI(k)}
+                  className={`h-2 rounded-full transition-all ${k === i ? "w-8 bg-accent" : "w-2 bg-border hover:bg-primary/30"}`}
+                  aria-label={`Depoimento ${k + 1}`}
+                />
+              ))}
             </div>
           </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- CTA Banner ---------- */
+
+function CtaBanner() {
+  return (
+    <section className="py-20 relative overflow-hidden" style={{ background: "linear-gradient(120deg, oklch(0.55 0.24 27), oklch(0.62 0.24 22))" }}>
+      <div className="pointer-events-none absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 80% 30%, white 1px, transparent 1px)", backgroundSize: "36px 36px" }} />
+      <Reveal>
+        <div className="relative mx-auto max-w-6xl px-6 flex flex-col lg:flex-row items-center justify-between gap-8">
+          <div className="text-white text-center lg:text-left">
+            <h2 className="text-3xl lg:text-4xl font-extrabold">
+              Precisa de uma solução logística para sua empresa?
+            </h2>
+            <p className="mt-3 text-white/90">Nossa equipe está pronta para desenhar a operação ideal para você.</p>
+          </div>
+          <a href="#contato" className="group inline-flex items-center gap-2 bg-white text-accent font-bold px-8 py-4 rounded-xl shadow-lg hover:-translate-y-1 hover:shadow-2xl transition-all">
+            Solicitar orçamento <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+          </a>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+/* ---------- Contact ---------- */
+
+function Contact() {
+  return (
+    <section id="contato" className="py-24 lg:py-32 relative">
+      <div className="absolute inset-0 bg-grid opacity-30 pointer-events-none" />
+      <div className="relative mx-auto max-w-7xl px-6">
+        <Reveal>
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <span className="text-accent font-semibold text-sm tracking-widest uppercase">Contato</span>
+            <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-primary">
+              Vamos conversar sobre sua operação
+            </h2>
+          </div>
+        </Reveal>
+
+        <div className="grid lg:grid-cols-2 gap-10 items-stretch">
+          <Reveal>
+            <div className="rounded-2xl overflow-hidden border border-border shadow-sm min-h-[500px] h-full relative bg-surface">
+              <iframe
+                title="Mapa LKR — R. Prof. Mario Godói, 587, Santa Mônica, Uberlândia - MG"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=-48.2266%2C-18.9346%2C-48.2166%2C-18.9266&layer=mapnik&marker=-18.9306357%2C-48.221656"
+                className="w-full h-full absolute inset-0"
+                loading="lazy"
+              />
+              <a
+                href="https://www.google.com/maps/place/LKR+Servi%C3%A7os+Transportes+e+Log%C3%ADstica"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute bottom-4 left-4 right-4 rounded-xl bg-card/95 backdrop-blur border border-border px-4 py-3 shadow-lg flex items-start gap-3 hover:-translate-y-0.5 transition-transform"
+              >
+                <MapPin className="h-5 w-5 text-accent mt-0.5 shrink-0" />
+                <div>
+                  <div className="font-bold text-primary text-sm">LKR Serviços Transportes e Logística</div>
+                  <div className="text-xs text-muted-foreground">R. Prof. Mario Godói, 587 — Santa Mônica, Uberlândia - MG, 38408-332</div>
+                </div>
+              </a>
+            </div>
+          </Reveal>
+
+          <Reveal delay={150}>
+            <div className="rounded-2xl bg-card border border-border p-8 lg:p-10 shadow-sm">
+              <form className="grid grid-cols-1 sm:grid-cols-2 gap-4" onSubmit={(e) => e.preventDefault()}>
+                <Field label="Nome" placeholder="Seu nome" />
+                <Field label="Empresa" placeholder="Sua empresa" />
+                <Field label="Telefone" placeholder="(00) 00000-0000" />
+                <Field label="Email" placeholder="voce@empresa.com" type="email" />
+                <div className="sm:col-span-2">
+                  <label className="text-sm font-medium text-foreground">Mensagem</label>
+                  <textarea rows={4} placeholder="Conte-nos sobre sua necessidade logística..." className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all" />
+                </div>
+                <div className="sm:col-span-2">
+                  <button type="submit" className="btn-primary w-full group">
+                    Enviar mensagem <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </button>
+                </div>
+              </form>
+
+              <div className="mt-8 pt-8 border-t border-border grid grid-cols-3 gap-3">
+                <QuickAction icon={MessageCircle} label="WhatsApp" href="https://wa.me/553432291736?text=Ol%C3%A1!%20Gostaria%20de%20solicitar%20um%20or%C3%A7amento%20com%20a%20LKR%20Servi%C3%A7os." />
+                <QuickAction icon={Phone} label="Telefone" href="tel:+553432291736" />
+                <QuickAction icon={Mail} label="Email" href="mailto:comercial@lkrservicos.com.br" />
+              </div>
+            </div>
+          </Reveal>
         </div>
       </div>
     </section>
@@ -604,14 +790,14 @@ function Field({ label, ...rest }: { label: string } & React.InputHTMLAttributes
   return (
     <div>
       <label className="text-sm font-medium text-foreground">{label}</label>
-      <input {...rest} className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary transition-colors" />
+      <input {...rest} className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all" />
     </div>
   );
 }
 
 function QuickAction({ icon: Icon, label, href }: { icon: typeof Phone; label: string; href: string }) {
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 py-3 rounded-lg hover:bg-surface transition-colors">
+    <a href={href} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 py-3 rounded-lg hover:bg-surface hover:-translate-y-0.5 transition-all">
       <div className="h-10 w-10 rounded-lg grid place-items-center" style={{ background: "var(--gradient-primary)" }}>
         <Icon className="h-4 w-4 text-white" />
       </div>
@@ -619,6 +805,8 @@ function QuickAction({ icon: Icon, label, href }: { icon: typeof Phone; label: s
     </a>
   );
 }
+
+/* ---------- Footer ---------- */
 
 function Footer() {
   return (
@@ -636,7 +824,7 @@ function Footer() {
           </p>
           <div className="mt-6 flex gap-3">
             {[Facebook, Instagram, Linkedin].map((Ic, k) => (
-              <a key={k} href="#" className="h-9 w-9 rounded-lg border border-white/15 grid place-items-center hover:bg-white/10 transition-colors">
+              <a key={k} href="#" className="h-9 w-9 rounded-lg border border-white/15 grid place-items-center hover:bg-accent hover:border-accent hover:-translate-y-0.5 transition-all">
                 <Ic className="h-4 w-4" />
               </a>
             ))}
