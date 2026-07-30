@@ -298,6 +298,60 @@
 }
 .anim-plane { animation: planeCross 48s linear infinite; }
 
+/* ---- Cinematic hero ---- */
+@keyframes heroKenBurns {
+  0%   { transform: scale(1) translate3d(0, 0, 0); }
+  100% { transform: scale(1.08) translate3d(-1%, -1%, 0); }
+}
+.hero-kenburns { animation: heroKenBurns 25s ease-in-out infinite alternate; will-change: transform; }
+
+@keyframes lightSweep {
+  0%   { transform: translate3d(-160%, 0, 0) skewX(-18deg); opacity: 0; }
+  6%   { opacity: 0.45; }
+  22%  { transform: translate3d(260%, 0, 0) skewX(-18deg); opacity: 0; }
+  100% { transform: translate3d(260%, 0, 0) skewX(-18deg); opacity: 0; }
+}
+.light-sweep { animation: lightSweep 8s ease-in-out infinite; will-change: transform, opacity; }
+
+@keyframes sunBreathe {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50%      { opacity: 0.9; transform: scale(1.12); }
+}
+.sun-breathe { animation: sunBreathe 6s ease-in-out infinite; will-change: transform, opacity; }
+
+@keyframes cloudDrift {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-6%, 0, 0); }
+}
+.cloud-drift { animation: cloudDrift 42s ease-in-out infinite alternate; will-change: transform; }
+
+@keyframes rippleFx {
+  to { transform: scale(4); opacity: 0; }
+}
+.ripple-el {
+  position: absolute;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.55);
+  transform: scale(0);
+  opacity: 0.6;
+  pointer-events: none;
+  animation: rippleFx 0.7s ease-out forwards;
+}
+
+@keyframes heroBgIn {
+  from { opacity: 0; transform: translateX(4%) scale(1.05); filter: blur(20px); }
+  to   { opacity: 1; transform: translateX(0) scale(1); filter: blur(0); }
+}
+.hero-bg-in { animation: heroBgIn 1.5s cubic-bezier(0.16, 1, 0.3, 1) both; will-change: transform, opacity, filter; }
+
+.hero-red-word {
+  color: #e31e24;
+  text-shadow: 0 0 18px rgba(227, 30, 36, 0.6);
+  transition: text-shadow 0.3s ease;
+  cursor: default;
+}
+.hero-red-word:hover { text-shadow: 0 0 30px rgba(227, 30, 36, 0.95); }
+
 @keyframes shimmer-text {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
@@ -351,7 +405,8 @@
   .animate-kenburns, .animate-float, .text-shimmer, .animate-marquee,
   .animate-progress, .animate-pulse-ring, .animate-spin-slow,
   .hero-media-in, .nav-fade, .anim-fade-down, .anim-fade-up-blur,
-  .anim-slide-up, .anim-plane {
+  .anim-slide-up, .anim-plane, .hero-kenburns, .light-sweep,
+  .sun-breathe, .cloud-drift, .ripple-el, .hero-bg-in {
     animation: none !important;
   }
   .reveal { opacity: 1; transform: none; }

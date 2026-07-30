@@ -4,12 +4,13 @@ import {
   Truck, ShieldCheck, Clock, MapPin, Phone, Mail, MessageCircle,
   Package, Route as RouteIcon, Boxes, Warehouse, Send, LineChart,
   Users, Star, ArrowRight, CheckCircle2, Menu, X, Facebook, Instagram, Linkedin, Plane,
-  ArrowUp, Sparkles, Smartphone, Thermometer, Pill, HeartPulse, Handshake,
-  Timer, Zap, Radio, ClipboardCheck, Calendar,
+  ArrowUp, Smartphone, Thermometer, Pill, HeartPulse, Handshake,
+  Timer, Zap, Radio, ClipboardCheck,
 } from "lucide-react";
-import heroImg from "@/assets/hero-caminhao.jpg";
 import sedeImg from "@/assets/sede-lkr.jpg";
 import { LkrLogo } from "../components/LkrLogo";
+import { ContainerScroll } from "@/components/ui/container-scroll-animation";
+import { HeroCinematic } from "@/components/HeroCinematic";
 
 export const Route = createFileRoute("/")({
   component: Landing,
@@ -144,8 +145,9 @@ function Landing() {
       </div>
 
       <Navbar scrolled={scrolled} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
-      <Hero />
+      <HeroCinematic />
       <BrandStrip />
+      <FrotaShowcase />
       <About />
       <Services />
       <Solucoes />
@@ -260,148 +262,6 @@ function Navbar({ scrolled, menuOpen, setMenuOpen }: { scrolled: boolean; menuOp
   );
 }
 
-/* ---------- Hero ---------- */
-
-function Hero() {
-  const stats = [
-    { icon: Calendar, label: "Desde 1994" },
-    { icon: MapPin, label: "Rastreamento" },
-    { icon: ShieldCheck, label: "Transporte Seguro" },
-    { icon: Clock, label: "Entrega no Prazo" },
-  ];
-  const reduced = usePrefersReducedMotion();
-  const [parallax, setParallax] = useState(0);
-  useEffect(() => {
-    if (reduced) {
-      setParallax(0);
-      return;
-    }
-    let raf = 0;
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        setParallax(Math.min(window.scrollY * 0.18, 120));
-      });
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      cancelAnimationFrame(raf);
-    };
-  }, [reduced]);
-  return (
-    <section id="home" className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Background — rodovia ao pôr do sol + carreta LKR (slideRight + Ken Burns + parallax) */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="hero-media-in absolute inset-0">
-          <div
-            className="absolute -inset-y-[12%] inset-x-0 will-change-transform"
-            style={{ transform: `translateY(${parallax}px)` }}
-          >
-            <img
-              src={heroImg}
-              alt="Carreta LKR Serviços em rodovia ao pôr do sol com avião de carga cruzando o céu"
-              className="absolute inset-0 w-full h-full object-cover animate-kenburns"
-              width={1920}
-              height={1280}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Overlay escuro — gradiente esquerda → direita (#08152F) para leitura */}
-      <div
-        className="absolute inset-0"
-        style={{ background: "linear-gradient(90deg, rgba(8,21,47,0.9) 0%, rgba(8,21,47,0.62) 38%, rgba(8,21,47,0.2) 66%, rgba(8,21,47,0) 100%)" }}
-      />
-      <div
-        className="absolute inset-0"
-        style={{ background: "linear-gradient(180deg, rgba(8,21,47,0.35) 0%, rgba(8,21,47,0) 30%, rgba(8,21,47,0.55) 100%)" }}
-      />
-
-      {/* Avião cruzando o céu lentamente (parallax infinito) */}
-      <div className="pointer-events-none absolute top-[14%] left-0 z-[5] anim-plane">
-        <Plane className="h-8 w-8 lg:h-10 lg:w-10 text-white/30 rotate-[18deg] drop-shadow-[0_2px_10px_rgba(0,0,0,0.4)]" />
-      </div>
-
-      {/* Floating orbs (profundidade sutil) */}
-      <div className="pointer-events-none absolute -top-24 -left-24 h-96 w-96 rounded-full bg-[#E31E24]/15 blur-3xl animate-float" />
-
-      {/* Conteúdo — layout em duas colunas */}
-      <div className="relative z-10 mx-auto max-w-7xl px-6 pt-28 pb-24 w-full">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="max-w-2xl">
-            <div className="anim-fade-down inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-4 py-1.5 text-white text-xs font-semibold tracking-wide mb-7">
-              <Sparkles className="h-3.5 w-3.5 text-[#E31E24]" />
-              Transportes &amp; Logística Integrada
-            </div>
-
-            <h1
-              className="anim-fade-up-blur font-sans font-extrabold text-white text-5xl sm:text-6xl lg:text-7xl xl:text-[84px] leading-[1.02] tracking-tight"
-              style={{ animationDelay: "0.05s" }}
-            >
-              Do <span style={{ color: "#E31E24" }}>céu</span> à estrada.
-              <br />
-              Sua carga no destino.
-            </h1>
-
-            <p
-              className="fade-up mt-7 text-lg lg:text-xl font-medium text-white/85 max-w-xl leading-relaxed"
-              style={{ animationDelay: "0.3s" }}
-            >
-              Experiência, segurança e compromisso para manter o seu negócio sempre em movimento.
-            </p>
-
-            <div className="anim-slide-up mt-9 flex flex-col sm:flex-row flex-wrap gap-4" style={{ animationDelay: "0.45s" }}>
-              <a href="#contato" className="hero-btn-primary group">
-                Solicitar orçamento
-                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-              </a>
-              <a
-                href="https://wa.me/553432291736?text=Ol%C3%A1!%20Gostaria%20de%20solicitar%20um%20or%C3%A7amento%20com%20a%20LKR%20Servi%C3%A7os."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hero-btn-ghost group"
-              >
-                <MessageCircle className="h-5 w-5" />
-                Falar no WhatsApp
-              </a>
-            </div>
-
-            {/* Barra de diferenciais */}
-            <div className="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-3">
-              {stats.map((s, i) => (
-                <div
-                  key={s.label}
-                  className="hero-stat anim-slide-up rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 p-4 flex flex-col gap-2.5"
-                  style={{ animationDelay: `${0.6 + i * 0.12}s` }}
-                >
-                  <div className="h-9 w-9 rounded-lg bg-[#E31E24]/90 grid place-items-center shrink-0">
-                    <s.icon className="h-5 w-5 text-white" />
-                  </div>
-                  <span className="text-white text-sm font-semibold">{s.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Coluna direita deixada livre para valorizar a carreta no fundo */}
-          <div className="hidden lg:block" aria-hidden="true" />
-        </div>
-      </div>
-
-      {/* Scroll cue */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-2 text-white/70">
-        <span className="text-[10px] tracking-[0.25em] uppercase">Scroll</span>
-        <div className="h-8 w-[1px] bg-white/40 relative overflow-hidden">
-          <div className="absolute inset-x-0 top-0 h-3 bg-[#E31E24] animate-[float-y_1.8s_ease-in-out_infinite]" />
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ---------- Brand strip ---------- */
 
 function BrandStrip() {
@@ -417,6 +277,37 @@ function BrandStrip() {
           ))}
         </div>
       </div>
+    </section>
+  );
+}
+
+/* ---------- Frota (scroll showcase) ---------- */
+
+function FrotaShowcase() {
+  return (
+    <section id="frota" className="bg-background overflow-hidden">
+      <ContainerScroll
+        titleComponent={
+          <div className="pb-6">
+            <span className="text-accent font-semibold text-sm tracking-widest uppercase">Nossa Frota</span>
+            <h2 className="mt-3 text-4xl md:text-6xl font-extrabold text-primary leading-tight">
+              Estrutura que entrega <br />
+              <span className="text-accent">em todo o Brasil</span>
+            </h2>
+            <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
+              Frota moderna, monitorada em tempo real e preparada para cada tipo de operação.
+            </p>
+          </div>
+        }
+      >
+        <img
+          src="/estrutura/frota.jpg"
+          alt="Frota LKR Serviços"
+          className="mx-auto h-full w-full rounded-2xl object-cover object-center"
+          draggable={false}
+          loading="lazy"
+        />
+      </ContainerScroll>
     </section>
   );
 }
