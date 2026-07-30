@@ -512,20 +512,18 @@ function Solucoes() {
               </p>
               <div className="mt-6 grid sm:grid-cols-2 gap-4">
                 {modalidades.map((m, i) => (
-                  <div
-                    key={m.t}
-                    className="group rounded-2xl border border-border bg-card p-6 card-hover"
-                    style={{ transitionDelay: `${i * 40}ms` }}
-                  >
-                    <div
-                      className="h-11 w-11 rounded-xl grid place-items-center transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
-                      style={{ background: "var(--gradient-primary)" }}
-                    >
-                      <m.icon className="h-5 w-5 text-white" />
+                  <MotionCard key={m.t} delay={i * 0.06} className="h-full">
+                    <div className="group h-full rounded-2xl border border-border bg-card p-6 transition-shadow hover:shadow-[0_18px_44px_-20px_rgba(20,35,168,0.35)]">
+                      <div
+                        className="h-11 w-11 rounded-xl grid place-items-center transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
+                        style={{ background: "var(--gradient-primary)" }}
+                      >
+                        <m.icon className="h-5 w-5 text-white" />
+                      </div>
+                      <h3 className="mt-4 font-bold text-primary">{m.t}</h3>
+                      <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">{m.d}</p>
                     </div>
-                    <h3 className="mt-4 font-bold text-primary">{m.t}</h3>
-                    <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">{m.d}</p>
-                  </div>
+                  </MotionCard>
                 ))}
               </div>
               <p className="mt-6 text-sm text-muted-foreground leading-relaxed">
@@ -602,15 +600,15 @@ function Medicamentos() {
 
         <div className="mt-14 grid sm:grid-cols-2 gap-5">
           {pilares.map((p, i) => (
-            <Reveal key={p.t} delay={i * 80}>
-              <div className="group rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-7 hover:bg-white/10 hover:-translate-y-1.5 hover:border-white/30 transition-all h-full">
+            <MotionCard key={p.t} delay={i * 0.07} className="h-full">
+              <div className="group h-full rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-7 hover:bg-white/10 hover:border-white/30 transition-colors">
                 <div className="h-12 w-12 rounded-xl bg-accent grid place-items-center transition-transform group-hover:scale-110 group-hover:rotate-6">
                   <p.icon className="h-6 w-6 text-white" />
                 </div>
                 <h3 className="mt-5 font-bold text-lg">{p.t}</h3>
                 <p className="mt-2 text-sm text-white/70 leading-relaxed">{p.d}</p>
               </div>
-            </Reveal>
+            </MotionCard>
           ))}
         </div>
 
@@ -768,8 +766,8 @@ function Cobertura() {
 
         <div className="mt-16 grid lg:grid-cols-2 gap-6">
           {modais.map((m, i) => (
-            <Reveal key={m.t} delay={i * 100}>
-              <div className="group relative overflow-hidden rounded-2xl p-8 text-white h-full" style={{ background: "var(--gradient-primary)" }}>
+            <MotionCard key={m.t} delay={i * 0.1} className="h-full">
+              <div className="group relative overflow-hidden rounded-2xl p-8 text-white h-full transition-shadow hover:shadow-[0_24px_60px_-24px_rgba(20,35,168,0.6)]" style={{ background: "var(--gradient-primary)" }}>
                 <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-accent/20 blur-2xl" />
                 <div className="relative h-14 w-14 rounded-2xl bg-accent grid place-items-center transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6">
                   <m.icon className="h-7 w-7 text-white" />
@@ -777,21 +775,21 @@ function Cobertura() {
                 <h3 className="relative mt-6 font-bold text-2xl">{m.t}</h3>
                 <p className="relative mt-2 text-white/80">{m.d}</p>
               </div>
-            </Reveal>
+            </MotionCard>
           ))}
         </div>
 
         <div className="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-5">
           {pontos.map((p, i) => (
-            <Reveal key={p.t} delay={i * 70}>
-              <div className="rounded-xl border border-border bg-card p-5 card-hover text-center h-full">
+            <MotionCard key={p.t} delay={i * 0.06} className="h-full">
+              <div className="h-full rounded-xl border border-border bg-card p-5 text-center transition-shadow hover:shadow-[0_16px_40px_-20px_rgba(20,35,168,0.35)]">
                 <div className="mx-auto h-11 w-11 rounded-xl bg-accent/10 grid place-items-center">
                   <p.icon className="h-5 w-5 text-accent" />
                 </div>
                 <div className="mt-3 font-bold text-primary text-sm">{p.t}</div>
                 <div className="text-xs text-muted-foreground mt-1">{p.d}</div>
               </div>
-            </Reveal>
+            </MotionCard>
           ))}
         </div>
 
