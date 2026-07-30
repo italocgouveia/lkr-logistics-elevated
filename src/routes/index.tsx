@@ -11,6 +11,7 @@ import sedeImg from "@/assets/sede-lkr.jpg";
 import { LkrLogo } from "../components/LkrLogo";
 import { HeroCinematic } from "@/components/HeroCinematic";
 import { usePremiumButtons } from "@/lib/usePremiumButtons";
+import { MotionCard } from "@/components/ui/motion-card";
 
 export const Route = createFileRoute("/")({
   component: Landing,
@@ -663,14 +664,14 @@ function Differentiators() {
 
         <div className="mt-16 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {items.map((i, k) => (
-            <Reveal key={i.t} delay={k * 60}>
-              <div className="group rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-6 hover:bg-white/10 hover:-translate-y-1.5 hover:border-white/30 transition-all h-full">
+            <MotionCard key={i.t} delay={k * 0.06} className="h-full">
+              <div className="group rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-6 hover:bg-white/10 hover:border-white/30 transition-colors h-full">
                 <div className="h-11 w-11 rounded-xl bg-accent grid place-items-center transition-transform group-hover:scale-110 group-hover:rotate-6">
                   <i.icon className="h-5 w-5 text-white" />
                 </div>
                 <h3 className="mt-5 font-semibold">{i.t}</h3>
               </div>
-            </Reveal>
+            </MotionCard>
           ))}
         </div>
       </div>
