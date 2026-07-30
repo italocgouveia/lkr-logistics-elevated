@@ -10,6 +10,7 @@ import {
 import sedeImg from "@/assets/sede-lkr.jpg";
 import { LkrLogo } from "../components/LkrLogo";
 import { HeroCinematic } from "@/components/HeroCinematic";
+import { usePremiumButtons } from "@/lib/usePremiumButtons";
 
 export const Route = createFileRoute("/")({
   component: Landing,
@@ -118,6 +119,7 @@ function Landing() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showTop, setShowTop] = useState(false);
+  usePremiumButtons();
 
   useEffect(() => {
     const onScroll = () => {

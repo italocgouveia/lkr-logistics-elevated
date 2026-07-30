@@ -1,10 +1,9 @@
 import React, { useRef } from "react";
 
 /**
- * MagneticButton — botão que "puxa" em direção ao cursor (efeito magnético),
- * hover em escala, glow (via CSS/className) e ripple ao clicar.
- * Versão nativa: sem dependências, usa transform inline + transição CSS.
- * Renderiza como <a> (link) para casar com os CTAs do hero.
+ * MagneticButton — botão que "puxa" em direção ao cursor (efeito magnético,
+ * máx. ~12px), sobe 4px no hover, comprime no clique (scale 0.96) e emite
+ * ripple. Versão nativa (spring via transição CSS), sem dependências.
  */
 export function MagneticButton({
   children,
@@ -12,7 +11,8 @@ export function MagneticButton({
   href,
   target,
   rel,
-  strength = 0.35,
+  strength = 0.3,
+  max = 12,
   onClick,
 }: {
   children: React.ReactNode;
@@ -21,22 +21,46 @@ export function MagneticButton({
   target?: string;
   rel?: string;
   strength?: number;
+  max?: number;
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }) {
   const ref = useRef<HTMLAnchorElement>(null);
+  const pressed = useRef(false);
+
+  const clamp = (v: number) => Math.max(-max, Math.min(max, v));
+
+  const render = (mx: number, my: number, hovering: boolean) => {
+    const el = ref.current;
+    if (!el) return;
+    const scale = pressed.current ? 0.96 : hovering ? 1.05 : 1;
+    const lift = hovering ? -4 : 0;
+    el.style.transform = `translate3d(${mx}px, ${my + lift}px, 0) scale(${scale})`;
+  };
 
   const move = (e: React.MouseEvent<HTMLAnchorElement>) => {
     const el = ref.current;
     if (!el) return;
     const r = el.getBoundingClientRect();
-    const mx = (e.clientX - (r.left + r.width / 2)) * strength;
-    const my = (e.clientY - (r.top + r.height / 2)) * strength;
-    el.style.transform = `translate3d(${mx}px, ${my}px, 0) scale(1.05)`;
+    const mx = clamp((e.clientX - (r.left + r.width / 2)) * strength);
+    const my = clamp((e.clientY - (r.top + r.height / 2)) * strength);
+    render(mx, my, true);
   };
 
   const leave = () => {
+    pressed.current = false;
+    render(0, 0, false);
+  };
+
+  const down = () => {
+    pressed.current = true;
     const el = ref.current;
-    if (el) el.style.transform = "translate3d(0, 0, 0) scale(1)";
+    if (el) el.style.transform = el.style.transform.replace(/scale\([^)]*\)/, "scale(0.96)");
+  };
+
+  const up = () => {
+    pressed.current = false;
+    const el = ref.current;
+    if (el) el.style.transform = el.style.transform.replace(/scale\([^)]*\)/, "scale(1.05)");
   };
 
   const click = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -63,8 +87,11 @@ export function MagneticButton({
       rel={rel}
       onMouseMove={move}
       onMouseLeave={leave}
+      onMouseDown={down}
+      onMouseUp={up}
       onClick={click}
-      className={`relative overflow-hidden transition-transform duration-300 ease-out will-change-transform ${className}`}
+      className={`btn-magnetic transition-transform duration-300 ease-out will-change-transform ${className}`}
+      style={{ transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}
     >
       {children}
     </a>
