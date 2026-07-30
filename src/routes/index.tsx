@@ -12,6 +12,7 @@ import { LkrLogo } from "../components/LkrLogo";
 import { HeroCinematic } from "@/components/HeroCinematic";
 import { usePremiumButtons } from "@/lib/usePremiumButtons";
 import { MotionCard } from "@/components/ui/motion-card";
+import { WhatsappIcon } from "@/components/ui/whatsapp-icon";
 
 export const Route = createFileRoute("/")({
   component: Landing,
@@ -170,7 +171,7 @@ function Landing() {
         aria-label="Falar no WhatsApp"
         className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-accent grid place-items-center text-white shadow-lg animate-pulse-ring hover:scale-110 transition-transform"
       >
-        <MessageCircle className="h-6 w-6" />
+        <WhatsappIcon className="h-7 w-7" />
       </a>
 
       {/* Back to top */}
