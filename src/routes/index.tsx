@@ -283,14 +283,21 @@ function Navbar({ scrolled, menuOpen, setMenuOpen }: { scrolled: boolean; menuOp
 /* ---------- Brand strip ---------- */
 
 function BrandStrip() {
-  const items = [...BRANDS, ...BRANDS];
+  const items = [...BRANDS, ...BRANDS, ...BRANDS, ...BRANDS];
   return (
-    <section className="border-y border-border bg-surface py-8 overflow-hidden">
+    <section className="border-y border-border bg-surface py-7 overflow-hidden">
       <div className="mask-fade-x">
-        <div className="flex gap-16 whitespace-nowrap animate-marquee w-max">
+        <div
+          className="flex items-center gap-3.5 whitespace-nowrap animate-marquee w-max"
+          style={{ animationDuration: "60s" }}
+        >
           {items.map((b, i) => (
-            <div key={i} className="text-primary/60 font-display font-extrabold text-2xl tracking-tight hover:text-primary transition-colors">
-              {b}
+            <div
+              key={i}
+              className="inline-flex items-center gap-2.5 rounded-full border border-border bg-card px-5 py-2.5 shadow-sm transition-colors hover:border-accent/40"
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-accent shrink-0" />
+              <span className="text-[13px] font-semibold uppercase tracking-[0.14em] text-primary/70">{b}</span>
             </div>
           ))}
         </div>
