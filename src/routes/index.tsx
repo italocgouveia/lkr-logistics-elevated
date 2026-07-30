@@ -421,10 +421,10 @@ function Services() {
 
         <div className="mt-16 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {items.map((s, i) => (
-            <Reveal key={s.t} delay={i * 70}>
+            <MotionCard key={s.t} delay={i * 0.06} className="h-full">
               <a
                 href="#contato"
-                className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-card border border-border p-7 tilt-card hover:border-accent/40"
+                className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-card border border-border p-7 hover:border-accent/40 hover:shadow-[0_20px_50px_-20px_rgba(20,35,168,0.35)] transition-shadow"
               >
                 <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-accent/10 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
                 <span className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-accent transition-transform duration-300 group-hover:scale-x-100" />
@@ -441,7 +441,7 @@ function Services() {
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </div>
               </a>
-            </Reveal>
+            </MotionCard>
           ))}
         </div>
       </div>
