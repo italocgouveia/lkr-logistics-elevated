@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import sedeImg from "@/assets/sede-lkr.jpg";
 import { LkrLogo } from "../components/LkrLogo";
-import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import { HeroCinematic } from "@/components/HeroCinematic";
 
 export const Route = createFileRoute("/")({
@@ -106,7 +105,6 @@ const NAV = [
   { label: "Home", href: "#home" },
   { label: "Sobre", href: "#sobre" },
   { label: "Serviços", href: "#servicos" },
-  { label: "Estrutura", href: "#estrutura" },
   { label: "Diferenciais", href: "#diferenciais" },
   { label: "Contato", href: "#contato" },
 ];
@@ -147,13 +145,11 @@ function Landing() {
       <Navbar scrolled={scrolled} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
       <HeroCinematic />
       <BrandStrip />
-      <FrotaShowcase />
       <About />
       <Services />
       <Solucoes />
       <Medicamentos />
       <Differentiators />
-      <Estrutura />
       <Rastreamento />
       <Cobertura />
       <Process />
@@ -277,37 +273,6 @@ function BrandStrip() {
           ))}
         </div>
       </div>
-    </section>
-  );
-}
-
-/* ---------- Frota (scroll showcase) ---------- */
-
-function FrotaShowcase() {
-  return (
-    <section id="frota" className="bg-background overflow-hidden">
-      <ContainerScroll
-        titleComponent={
-          <div className="pb-6">
-            <span className="text-accent font-semibold text-sm tracking-widest uppercase">Nossa Frota</span>
-            <h2 className="mt-3 text-4xl md:text-6xl font-extrabold text-primary leading-tight">
-              Estrutura que entrega <br />
-              <span className="text-accent">em todo o Brasil</span>
-            </h2>
-            <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
-              Frota moderna, monitorada em tempo real e preparada para cada tipo de operação.
-            </p>
-          </div>
-        }
-      >
-        <img
-          src="/estrutura/frota.jpg"
-          alt="Frota LKR Serviços"
-          className="mx-auto h-full w-full rounded-2xl object-cover object-center"
-          draggable={false}
-          loading="lazy"
-        />
-      </ContainerScroll>
     </section>
   );
 }
@@ -684,59 +649,6 @@ function Differentiators() {
                 </div>
                 <h3 className="mt-5 font-semibold">{i.t}</h3>
               </div>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Estrutura() {
-  const photos = [
-    { src: "/estrutura/sede.jpg", t: "Nossa sede", d: "Uberlândia - MG" },
-    { src: "/estrutura/frota.jpg", t: "Frota própria", d: "Veículos para entrega e distribuição" },
-    { src: "/estrutura/armazem.jpg", t: "Armazenagem", d: "Porta-paletes e estoque organizado" },
-    { src: "/estrutura/camara-refrigerada.jpg", t: "Câmara refrigerada", d: "Temperatura controlada de 2 a 8°C" },
-    { src: "/estrutura/congelados.jpg", t: "Câmara de congelados", d: "Cadeia de frio para cargas sensíveis" },
-    { src: "/estrutura/monitoramento.jpg", t: "Central de monitoramento", d: "Acompanhamento das operações" },
-    { src: "/estrutura/sac.jpg", t: "SAC Operacional", d: "Atendimento dedicado ao cliente" },
-    { src: "/estrutura/operacao.jpg", t: "Expedição", d: "Preparação e conferência de cargas" },
-  ];
-  return (
-    <section id="estrutura" className="py-24 lg:py-32">
-      <div className="mx-auto max-w-7xl px-6">
-        <Reveal>
-          <div className="text-center max-w-2xl mx-auto">
-            <span className="text-accent font-semibold text-sm tracking-widest uppercase">Nossa Estrutura</span>
-            <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-primary">
-              Uma operação real, feita para entregar
-            </h2>
-            <p className="mt-4 text-muted-foreground">
-              Sede própria, frota, armazenagem e cadeia de frio em Uberlândia - MG.
-            </p>
-          </div>
-        </Reveal>
-
-        <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {photos.map((p, i) => (
-            <Reveal
-              key={p.src}
-              as="figure"
-              delay={(i % 4) * 90}
-              className="group relative overflow-hidden rounded-2xl border border-border shadow-sm"
-            >
-              <img
-                src={p.src}
-                alt={p.t}
-                loading="lazy"
-                className="h-64 w-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
-              <figcaption className="absolute inset-x-0 bottom-0 p-5">
-                <div className="font-bold text-white">{p.t}</div>
-                <div className="text-xs text-white/80">{p.d}</div>
-              </figcaption>
             </Reveal>
           ))}
         </div>
