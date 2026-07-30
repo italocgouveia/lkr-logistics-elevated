@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, MessageCircle, Sparkles, Calendar, MapPin, ShieldCheck, Clock } from "lucide-react";
 import heroImg from "@/assets/hero-caminhao.jpg";
+import planeImg from "@/assets/aviao-lkr.png";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 
 function usePrefersReducedMotion() {
@@ -47,12 +48,9 @@ export function HeroCinematic() {
       const y = window.scrollY;
       const vh = window.innerHeight || 1;
       const p = Math.min(y / vh, 1);
-      if (bgParallaxRef.current) bgParallaxRef.current.style.transform = `translate3d(0, ${p * 18}%, 0)`;
-      if (cloudsParallaxRef.current) cloudsParallaxRef.current.style.transform = `translate3d(0, ${p * 9}%, 0)`;
-      if (contentRef.current) {
-        contentRef.current.style.transform = `translate3d(0, ${p * -90}px, 0)`;
-        contentRef.current.style.opacity = String(clamp(1 - p / 0.55, 0, 1));
-      }
+      // Parallax só no fundo/nuvens — o conteúdo permanece nítido e visível ao rolar
+      if (bgParallaxRef.current) bgParallaxRef.current.style.transform = `translate3d(0, ${p * 12}%, 0)`;
+      if (cloudsParallaxRef.current) cloudsParallaxRef.current.style.transform = `translate3d(0, ${p * 6}%, 0)`;
     };
     const onScroll = () => {
       cancelAnimationFrame(raf);
@@ -255,16 +253,16 @@ export function HeroCinematic() {
         <div className="light-sweep absolute inset-y-0 -left-1/3 w-1/3" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent)", mixBlendMode: "screen" }} />
       </div>
 
-      {/* Camada 4 — Avião (SVG) + contrail/partículas (canvas) */}
+      {/* Camada 4 — Avião LKR (PNG) + contrail/partículas (canvas) */}
       <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 z-[6]" aria-hidden="true" />
-      <div ref={planeOuterRef} className="pointer-events-none absolute top-[16%] left-0 z-[7] will-change-transform" style={{ transform: "translate3d(-150%,0,0) rotate(5deg)" }} aria-hidden="true">
-        <div ref={planeInnerRef} className="will-change-transform" style={{ filter: "blur(0.5px) drop-shadow(0 14px 22px rgba(0,0,0,0.45))" }}>
-          <PlaneSvg />
+      <div ref={planeOuterRef} className="pointer-events-none absolute top-[14%] left-0 z-[7] will-change-transform" style={{ transform: "translate3d(-150%,0,0) rotate(5deg)" }} aria-hidden="true">
+        <div ref={planeInnerRef} className="will-change-transform" style={{ filter: "blur(0.4px) drop-shadow(0 16px 26px rgba(0,0,0,0.4))" }}>
+          <img src={planeImg} alt="" className="w-40 lg:w-60 h-auto select-none" draggable={false} />
         </div>
       </div>
 
       {/* Camada 6 — Conteúdo */}
-      <div ref={contentRef} className="relative z-10 mx-auto max-w-7xl px-6 pt-28 pb-24 w-full will-change-transform">
+      <div ref={contentRef} className="relative z-10 mx-auto max-w-7xl px-6 pt-24 pb-16 w-full will-change-transform">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="max-w-2xl">
             <div className="anim-fade-down inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-4 py-1.5 text-white text-xs font-semibold tracking-wide mb-7">
@@ -319,7 +317,7 @@ export function HeroCinematic() {
             </div>
 
             {/* Barra de diferenciais (stagger) */}
-            <div className="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="mt-8 grid grid-cols-2 lg:grid-cols-4 gap-3">
               {STATS.map((s, i) => (
                 <div
                   key={s.label}
@@ -347,19 +345,5 @@ export function HeroCinematic() {
         </div>
       </div>
     </section>
-  );
-}
-
-/** Silhueta de avião cargueiro (vista lateral). */
-function PlaneSvg() {
-  return (
-    <svg width="130" height="52" viewBox="0 0 130 52" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-9 w-auto lg:h-12">
-      <path
-        d="M2 30.5c0-1 .8-1.8 1.9-1.9l30-2.2 14.5-14.8c1-1 2.3-1.6 3.7-1.6h4.3c1.3 0 2 1.5 1.2 2.5L47.8 25l25.5-1.8 12-11.4c.9-.9 2.1-1.4 3.4-1.4h3c1.4 0 2.1 1.6 1.2 2.6l-7.8 9.6 33.7-2.2c3.5-.2 6.6 1.4 6.6 3.9s-3.1 4.1-6.6 3.9l-33.7-2.2 7.8 9.6c.9 1 .2 2.6-1.2 2.6h-3c-1.3 0-2.5-.5-3.4-1.4l-12-11.4L47.8 24l9.8 12.5c.8 1 .1 2.5-1.2 2.5h-4.3c-1.4 0-2.7-.6-3.7-1.6L33.9 22.6l-30-2.2C2.8 20.3 2 19.5 2 18.5"
-        fill="#f5f7fb"
-        fillOpacity="0.96"
-      />
-      <path d="M92 24.2h20c2.6 0 4.2.8 4.2 2.3s-1.6 2.3-4.2 2.3H92z" fill="#E31E24" fillOpacity="0.9" />
-    </svg>
   );
 }
