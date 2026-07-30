@@ -188,66 +188,85 @@ function Landing() {
 
 function Navbar({ scrolled, menuOpen, setMenuOpen }: { scrolled: boolean; menuOpen: boolean; setMenuOpen: (v: boolean) => void }) {
   return (
-    <header className={`anim-fade-down fixed inset-x-0 z-50 px-3 sm:px-5 transition-all duration-500 ${scrolled ? "top-2" : "top-4"}`}>
+    <header className={`anim-fade-down fixed inset-x-0 top-0 z-50 flex justify-center w-full px-4 transition-all duration-500 ${scrolled ? "py-2.5" : "py-5"}`}>
+      {/* Pill branca centralizada (estilo Navbar1) */}
       <div
-        className={`mx-auto max-w-7xl rounded-[28px] border border-white/60 transition-all duration-500 ${
-          scrolled ? "shadow-[0_10px_40px_-12px_rgba(8,21,47,0.35)]" : "shadow-[0_8px_30px_-14px_rgba(8,21,47,0.25)]"
+        className={`flex items-center justify-between w-full max-w-4xl rounded-full bg-white transition-all duration-500 ${
+          scrolled ? "px-5 py-2 shadow-[0_10px_40px_-12px_rgba(8,21,47,0.35)]" : "px-6 py-3 shadow-[0_12px_36px_-14px_rgba(8,21,47,0.28)]"
         }`}
-        style={{ background: "rgba(255,255,255,0.92)", backdropFilter: "blur(18px)", WebkitBackdropFilter: "blur(18px)" }}
       >
-        <div className={`flex items-center justify-between px-5 lg:px-7 transition-all duration-500 ${scrolled ? "h-14" : "h-[68px]"}`}>
-          <a href="#home" className="flex items-center group">
-            <LkrLogo
-              variant="icon"
-              className={`w-auto transition-all duration-500 group-hover:scale-105 ${scrolled ? "h-9" : "h-11"}`}
-            />
-          </a>
+        {/* Logo */}
+        <a href="#home" className="flex items-center group shrink-0" aria-label="LKR Serviços - início">
+          <LkrLogo
+            variant="icon"
+            className={`w-auto transition-transform duration-500 group-hover:scale-105 ${scrolled ? "h-8" : "h-10"}`}
+          />
+        </a>
 
-          <nav className="hidden lg:flex items-center gap-8">
-            {NAV.map((n) => (
-              <a
-                key={n.href}
-                href={n.href}
-                className="link-underline text-sm font-medium text-[#08152F]/80 hover:text-[#08152F] transition-colors"
-              >
-                {n.label}
-              </a>
-            ))}
-          </nav>
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center gap-6 lg:gap-7">
+          {NAV.map((n) => (
+            <a
+              key={n.href}
+              href={n.href}
+              className="link-underline text-sm font-medium text-[#08152F]/80 hover:text-[#08152F] transition-colors"
+            >
+              {n.label}
+            </a>
+          ))}
+        </nav>
 
-          <a
-            href="#contato"
-            className={`hidden lg:inline-flex items-center gap-2 rounded-full bg-[#E31E24] font-bold text-white shadow-[0_10px_24px_-10px_rgba(227,30,36,0.7)] transition-all duration-300 hover:scale-105 active:scale-[0.98] ${
-              scrolled ? "px-4 py-2 text-sm" : "px-5 py-2.5 text-sm"
-            }`}
-          >
-            Solicitar Orçamento
-          </a>
-
-          <button
-            className="lg:hidden text-[#08152F]"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Menu"
-          >
-            {menuOpen ? <X /> : <Menu />}
-          </button>
-        </div>
-
-        <div
-          className={`lg:hidden overflow-hidden transition-[max-height,opacity] duration-500 ${
-            menuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-          }`}
+        {/* Desktop CTA */}
+        <a
+          href="#contato"
+          className="hidden md:inline-flex items-center gap-2 rounded-full bg-[#E31E24] px-5 py-2 text-sm font-bold text-white shadow-[0_10px_24px_-10px_rgba(227,30,36,0.7)] transition-transform duration-300 hover:scale-105 active:scale-[0.98] shrink-0"
         >
-          <div className="px-5 pb-5 pt-1 space-y-1 border-t border-[#08152F]/10">
-            {NAV.map((n) => (
-              <a key={n.href} href={n.href} onClick={() => setMenuOpen(false)} className="block text-sm font-medium text-[#08152F]/80 py-2.5">
-                {n.label}
-              </a>
-            ))}
+          Solicitar Orçamento
+        </a>
+
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden flex items-center text-[#08152F] transition-transform active:scale-90"
+          onClick={() => setMenuOpen(true)}
+          aria-label="Abrir menu"
+        >
+          <Menu className="h-6 w-6" />
+        </button>
+      </div>
+
+      {/* Mobile Menu Overlay (estilo Navbar1 — desliza da direita) */}
+      <div
+        className={`fixed inset-0 bg-white z-[60] pt-24 px-6 md:hidden transition-all duration-300 ease-out ${
+          menuOpen ? "opacity-100 translate-x-0 pointer-events-auto" : "opacity-0 translate-x-full pointer-events-none"
+        }`}
+        aria-hidden={!menuOpen}
+      >
+        <a href="#home" onClick={() => setMenuOpen(false)} className="absolute top-6 left-6" aria-label="LKR Serviços - início">
+          <LkrLogo variant="icon" className="h-9 w-auto" />
+        </a>
+        <button
+          className="absolute top-6 right-6 p-2 text-[#08152F] transition-transform active:scale-90"
+          onClick={() => setMenuOpen(false)}
+          aria-label="Fechar menu"
+        >
+          <X className="h-6 w-6" />
+        </button>
+        <div className="flex flex-col space-y-6">
+          {NAV.map((n) => (
+            <a
+              key={n.href}
+              href={n.href}
+              onClick={() => setMenuOpen(false)}
+              className="text-lg font-semibold text-[#08152F]"
+            >
+              {n.label}
+            </a>
+          ))}
+          <div className="pt-4">
             <a
               href="#contato"
               onClick={() => setMenuOpen(false)}
-              className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#E31E24] px-5 py-3 font-bold text-white"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#E31E24] px-5 py-3.5 text-base font-bold text-white"
             >
               Solicitar Orçamento
             </a>
