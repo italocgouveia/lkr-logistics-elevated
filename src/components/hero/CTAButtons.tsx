@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { ArrowRight, MessageCircle } from "lucide-react";
 
 const WHATSAPP_HREF =

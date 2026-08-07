@@ -1,4 +1,4 @@
-import { motion, type Variants } from "framer-motion";
+import { motion, type Variants } from "motion/react";
 
 const LINES: { text: string; accent?: boolean }[] = [
   { text: "Transportando seu" },
