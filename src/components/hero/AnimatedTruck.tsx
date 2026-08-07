@@ -1,4 +1,4 @@
-import { motion, type MotionValue } from "motion/react";
+import { motion, type MotionValue } from "framer-motion";
 
 /**
  * Full-bleed backdrop for the whole Hero — plays the graded reference clip
