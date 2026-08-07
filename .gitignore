@@ -23,11 +23,16 @@ dist-ssr
 # Netlify build output
 .netlify/
 
+# Vercel build output
+.vercel/
+
 # Fotos de origem (não usadas diretamente pelo site)
 img/
 
-# Este projeto usa bun.lock como lockfile
-package-lock.json
+# Lockfile: npm (package-lock.json versionado)
+
+# Config local do Claude Code (caminhos especificos da maquina)
+.claude/
 
 # Editor directories and files
 .vscode/*

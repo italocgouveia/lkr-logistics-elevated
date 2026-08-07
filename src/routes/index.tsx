@@ -4,11 +4,12 @@ import {
   Truck, ShieldCheck, Clock, MapPin, Phone, Mail, MessageCircle,
   Package, Route as RouteIcon, Boxes, Warehouse, Send, LineChart,
   Users, Star, ArrowRight, CheckCircle2, Menu, X, Facebook, Instagram, Linkedin, Plane,
-  ArrowUp, Sparkles,
+  ArrowUp,
 } from "lucide-react";
-import heroImg from "@/assets/hero-truck.jpg";
 import sedeImg from "@/assets/sede-lkr.jpg";
 import { LkrLogo } from "../components/LkrLogo";
+import { BorderBeamPanel } from "../components/ui/border-beam-panel";
+import { Hero } from "../components/hero/Hero";
 
 export const Route = createFileRoute("/")({
   component: Landing,
@@ -82,7 +83,6 @@ const NAV = [
   { label: "Home", href: "#home" },
   { label: "Sobre", href: "#sobre" },
   { label: "Serviços", href: "#servicos" },
-  { label: "Estrutura", href: "#estrutura" },
   { label: "Diferenciais", href: "#diferenciais" },
   { label: "Contato", href: "#contato" },
 ];
@@ -125,9 +125,11 @@ function Landing() {
       <BrandStrip />
       <About />
       <Services />
+      <Medicamentos />
       <Differentiators />
-      <Estrutura />
+      <Parceiros />
       <Process />
+      <Rastreamento />
       <Stats />
       <Testimonials />
       <CtaBanner />
@@ -165,52 +167,64 @@ function Navbar({ scrolled, menuOpen, setMenuOpen }: { scrolled: boolean; menuOp
   return (
     <header
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
-        scrolled ? "bg-white/90 backdrop-blur-xl shadow-sm border-b border-border" : "bg-transparent"
+        scrolled
+          ? "bg-primary-dark/90 backdrop-blur-xl shadow-[0_8px_30px_-14px_rgba(10,15,60,0.5)] border-b border-white/10"
+          : "bg-transparent"
       }`}
     >
-      <div className={`mx-auto max-w-7xl px-6 flex items-center justify-between transition-all duration-500 ${scrolled ? "h-16" : "h-20"}`}>
-        <a href="#home" className="flex items-center group">
+      <div
+        className={`mx-auto max-w-[1440px] px-6 lg:px-10 grid grid-cols-[auto_1fr_auto] items-center transition-all duration-500 ${
+          scrolled ? "h-16" : "h-20"
+        }`}
+      >
+        {/* The wordmark is a white-on-transparent lockup, so it sits directly on the
+            dark bar — no plate behind it. */}
+        <a href="#home" className="flex items-center group" aria-label="LKR Serviços — início">
           <LkrLogo
-            variant="icon"
-            className={`h-14 w-auto transition-all group-hover:scale-105 ${scrolled ? "" : "drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)]"}`}
+            variant="full"
+            className={`w-auto transition-all duration-500 group-hover:opacity-80 ${scrolled ? "h-8" : "h-10"}`}
           />
         </a>
 
-        <nav className="hidden lg:flex items-center gap-8">
+        <nav className="hidden lg:flex items-center justify-center gap-10">
           {NAV.map((n) => (
             <a
               key={n.href}
               href={n.href}
-              className={`relative text-sm font-medium transition-colors after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-accent after:transition-all hover:after:w-full ${
-                scrolled ? "text-foreground/80 hover:text-primary" : "text-white/90 hover:text-white"
-              }`}
+              className="relative text-sm font-medium transition-colors after:absolute after:left-0 after:-bottom-1.5 after:h-0.5 after:w-0 after:bg-accent after:transition-all hover:after:w-full text-white/85 hover:text-white"
             >
               {n.label}
             </a>
           ))}
         </nav>
 
-        <a href="#contato" className="hidden lg:inline-flex btn-primary !py-2.5 !px-5 !text-sm">
-          Solicitar Orçamento
-        </a>
-
-        <button
-          className={`lg:hidden ${scrolled ? "text-foreground" : "text-white"}`}
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Menu"
-        >
-          {menuOpen ? <X /> : <Menu />}
-        </button>
+        <div className="flex items-center justify-end gap-3">
+          <a href="#contato" className="hidden lg:inline-flex btn-primary !py-2.5 !px-5 !text-sm">
+            Solicitar Orçamento
+          </a>
+          <button
+            className="lg:hidden text-white"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Menu"
+          >
+            {menuOpen ? <X /> : <Menu />}
+          </button>
+        </div>
       </div>
 
       <div
-        className={`lg:hidden overflow-hidden bg-white border-t border-border transition-[max-height,opacity] duration-500 ${
+        className={`lg:hidden overflow-hidden bg-primary-dark/95 backdrop-blur-xl border-t border-white/10 transition-[max-height,opacity] duration-500 ${
           menuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <div className="px-6 py-4 space-y-3">
           {NAV.map((n) => (
-            <a key={n.href} href={n.href} onClick={() => setMenuOpen(false)} className="block text-sm font-medium py-2">
+            <a
+              key={n.href}
+              href={n.href}
+              onClick={() => setMenuOpen(false)}
+              className="block text-sm font-medium py-2 text-white/85 hover:text-white transition-colors"
+            >
               {n.label}
             </a>
           ))}
@@ -218,82 +232,6 @@ function Navbar({ scrolled, menuOpen, setMenuOpen }: { scrolled: boolean; menuOp
         </div>
       </div>
     </header>
-  );
-}
-
-/* ---------- Hero ---------- */
-
-function Hero() {
-  const chips = [
-    { icon: MapPin, label: "Atendimento Nacional" },
-    { icon: ShieldCheck, label: "Transporte Seguro" },
-    { icon: Clock, label: "Entrega no Prazo" },
-    { icon: LineChart, label: "Rastreamento" },
-  ];
-  return (
-    <section id="home" className="relative min-h-screen flex items-center overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden">
-        <img
-          src={heroImg}
-          alt="Caminhão LKR em rodovia e avião de carga ao pôr do sol"
-          className="absolute inset-0 w-full h-full object-cover animate-kenburns"
-          width={1920}
-          height={1280}
-        />
-      </div>
-      <div className="absolute inset-0" style={{ background: "var(--gradient-hero)" }} />
-
-      {/* Floating orbs */}
-      <div className="pointer-events-none absolute -top-24 -left-24 h-96 w-96 rounded-full bg-accent/25 blur-3xl animate-float" />
-      <div className="pointer-events-none absolute bottom-0 right-0 h-[28rem] w-[28rem] rounded-full bg-primary/40 blur-3xl animate-float" style={{ animationDelay: "1.2s" }} />
-
-      <div className="relative z-10 mx-auto max-w-7xl px-6 pt-32 pb-20 w-full">
-        <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-4 py-1.5 text-white text-xs font-medium mb-6 fade-up">
-            <Sparkles className="h-3.5 w-3.5 text-accent" />
-            Transportes & Logística Integrada
-          </div>
-          <h1 className="text-white font-extrabold text-4xl sm:text-5xl lg:text-7xl leading-[1.05] fade-up" style={{ animationDelay: "0.1s" }}>
-            Transportando seu negócio com{" "}
-            <span className="text-shimmer">segurança e eficiência</span>.
-          </h1>
-          <p className="mt-6 text-lg text-white/85 max-w-2xl fade-up" style={{ animationDelay: "0.25s" }}>
-            Soluções completas em transporte e logística para empresas de todo o Brasil.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-4 fade-up" style={{ animationDelay: "0.4s" }}>
-            <a href="#contato" className="btn-primary group">
-              Solicitar Orçamento <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </a>
-            <a href="https://wa.me/553432291736?text=Ol%C3%A1!%20Gostaria%20de%20solicitar%20um%20or%C3%A7amento%20com%20a%20LKR%20Servi%C3%A7os." target="_blank" rel="noopener noreferrer" className="btn-outline">
-              <MessageCircle className="h-4 w-4" /> Falar no WhatsApp
-            </a>
-          </div>
-        </div>
-
-        <div className="mt-16 grid grid-cols-2 lg:grid-cols-4 gap-3 max-w-4xl">
-          {chips.map((c, i) => (
-            <div
-              key={c.label}
-              className="rounded-xl bg-white/10 backdrop-blur-md border border-white/15 p-4 flex items-center gap-3 hover:bg-white/20 hover:-translate-y-1 hover:border-white/30 transition-all fade-up"
-              style={{ animationDelay: `${0.5 + i * 0.1}s` }}
-            >
-              <div className="h-10 w-10 rounded-lg bg-accent/90 grid place-items-center shrink-0">
-                <c.icon className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-white text-sm font-medium">{c.label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Scroll cue */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-2 text-white/70">
-        <span className="text-[10px] tracking-[0.25em] uppercase">Scroll</span>
-        <div className="h-8 w-[1px] bg-white/40 relative overflow-hidden">
-          <div className="absolute inset-x-0 top-0 h-3 bg-accent animate-[float-y_1.8s_ease-in-out_infinite]" />
-        </div>
-      </div>
-    </section>
   );
 }
 
@@ -514,50 +452,230 @@ function Differentiators() {
   );
 }
 
-function Estrutura() {
-  const photos = [
-    { src: "/estrutura/sede.jpg", t: "Nossa sede", d: "Uberlândia - MG" },
-    { src: "/estrutura/frota.jpg", t: "Frota própria", d: "Veículos para entrega e distribuição" },
-    { src: "/estrutura/armazem.jpg", t: "Armazenagem", d: "Porta-paletes e estoque organizado" },
-    { src: "/estrutura/camara-refrigerada.jpg", t: "Câmara refrigerada", d: "Temperatura controlada de 2 a 8°C" },
-    { src: "/estrutura/congelados.jpg", t: "Câmara de congelados", d: "Cadeia de frio para cargas sensíveis" },
-    { src: "/estrutura/monitoramento.jpg", t: "Central de monitoramento", d: "Acompanhamento das operações" },
-    { src: "/estrutura/sac.jpg", t: "SAC Operacional", d: "Atendimento dedicado ao cliente" },
-    { src: "/estrutura/operacao.jpg", t: "Expedição", d: "Preparação e conferência de cargas" },
+/* ---------- Medicamentos ---------- */
+
+function Medicamentos() {
+  const cards = [
+    { icon: Users, t: "Operação com excelência", d: "Equipe seguindo rigorosos padrões de qualidade, garantindo a integridade da carga em todas as etapas." },
+    { icon: Truck, t: "Serviços para cada necessidade", d: "Convencional, Expresso, Dedicado e Imediato, com veículos rastreados e monitorados em tempo real." },
+    { icon: Clock, t: "Veículos dedicados 24 horas", d: "Disponíveis para operações exclusivas, coletas emergenciais e entregas críticas." },
+    { icon: ShieldCheck, t: "Compromisso que faz a diferença", d: "Transportamos responsabilidade e confiança, dentro dos mais altos padrões do setor farmacêutico." },
   ];
   return (
-    <section id="estrutura" className="py-24 lg:py-32">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="text-center max-w-2xl mx-auto">
-          <span className="text-accent font-semibold text-sm tracking-widest uppercase">Nossa Estrutura</span>
-          <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-primary">
-            Uma operação real, feita para entregar
-          </h2>
-          <p className="mt-4 text-muted-foreground">
-            Sede própria, frota, armazenagem e cadeia de frio em Uberlândia - MG.
-          </p>
+    <section id="medicamentos" className="py-24 lg:py-32 bg-surface relative overflow-hidden">
+      <div className="absolute inset-0 bg-grid opacity-30 pointer-events-none" />
+      <div className="relative mx-auto max-w-7xl px-6 flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-16">
+        <div className="w-full lg:w-[45%]">
+          <Reveal>
+            <span className="text-accent font-semibold text-sm tracking-widest uppercase">LKR Farma</span>
+            <h2 className="mt-3 text-3xl lg:text-4xl font-extrabold text-primary leading-tight">
+              Transporte Especializado de Medicamentos
+            </h2>
+            <p className="mt-4 text-muted-foreground leading-relaxed">
+              A LKR é especializada no transporte de medicamentos, produtos para a saúde e cargas sensíveis,
+              oferecendo soluções logísticas seguras, ágeis e confiáveis para atender às exigências da
+              indústria farmacêutica.
+            </p>
+          </Reveal>
+          <div className="mt-8 space-y-4">
+            {cards.map((c, i) => (
+              <Reveal key={c.t} delay={100 + i * 80}>
+                <div className="flex gap-4 rounded-2xl bg-card border border-border p-5 card-hover">
+                  <div className="h-11 w-11 shrink-0 rounded-xl grid place-items-center" style={{ background: "var(--gradient-primary)" }}>
+                    <c.icon className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-primary">{c.t}</h3>
+                    <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{c.d}</p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
 
-        <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {photos.map((p) => (
-            <figure
-              key={p.src}
-              className="group relative overflow-hidden rounded-2xl border border-border shadow-sm"
+        <div className="w-full lg:w-[55%]">
+          <Reveal delay={150}>
+            <BorderBeamPanel
+              radius={24}
+              beams={2}
+              colors={["#4f7cff", "#38bdf8"]}
+              thickness={4}
+              glow
+              className="p-0 border-[3px] border-[#3b6cff]/70 overflow-hidden bg-white shadow-2xl"
             >
               <img
-                src={p.src}
-                alt={p.t}
+                src="/arte/transportes.jpg"
+                alt="Avião e van da LKR para transporte de medicamentos"
                 loading="lazy"
-                className="h-64 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="w-full block"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
-              <figcaption className="absolute inset-x-0 bottom-0 p-5">
-                <div className="font-bold text-white">{p.t}</div>
-                <div className="text-xs text-white/80">{p.d}</div>
-              </figcaption>
-            </figure>
-          ))}
+            </BorderBeamPanel>
+          </Reveal>
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Parceiros ---------- */
+
+function Parceiros() {
+  const premium = [
+    { icon: Plane, t: "Transporte Aéreo", d: "Agilidade e segurança que conectam todo o Brasil." },
+    { icon: Truck, t: "Entregas Rodoviárias", d: "Eficiência e pontualidade em cada entrega." },
+  ];
+  const mini = [
+    { icon: MapPin, t: "Base própria", d: "Uberlândia - MG" },
+    { icon: Users, t: "Parceiros estratégicos", d: "Rede em todo o país" },
+    { icon: ShieldCheck, t: "Cobertura nacional", d: "Segurança em cada etapa" },
+    { icon: Clock, t: "Agilidade", d: "Que sua operação precisa" },
+  ];
+  return (
+    <section id="parceiros" className="py-24 lg:py-32">
+      <div className="mx-auto max-w-7xl px-6">
+        <Reveal>
+          <div className="text-center max-w-2xl mx-auto">
+            <span className="text-accent font-semibold text-sm tracking-widest uppercase">Área de Atuação</span>
+            <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-primary">
+              Parceiros em todo o Brasil
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              Parceiros estratégicos que fazem a diferença para garantir agilidade, segurança e cobertura nacional.
+            </p>
+          </div>
+        </Reveal>
+
+        <div className="mt-16 grid lg:grid-cols-2 gap-12 items-center">
+          <Reveal>
+            <BorderBeamPanel
+              radius={24}
+              beams={2}
+              colors={["#4f7cff", "#38bdf8"]}
+              thickness={4}
+              glow
+              className="p-0 border-[3px] border-[#3b6cff]/70 overflow-hidden bg-white shadow-lg"
+            >
+              <img
+                src="/arte/parceiros.jpg"
+                alt="Parceiros da LKR em todo o Brasil"
+                loading="lazy"
+                className="w-full block"
+              />
+            </BorderBeamPanel>
+          </Reveal>
+
+          <div>
+            <div className="grid sm:grid-cols-2 gap-5">
+              {premium.map((p, i) => (
+                <Reveal key={p.t} delay={100 + i * 90}>
+                  <div className="h-full rounded-2xl p-6 text-white shadow-lg card-hover" style={{ background: "var(--gradient-primary)" }}>
+                    <div className="h-12 w-12 rounded-xl bg-white/15 grid place-items-center">
+                      <p.icon className="h-6 w-6" />
+                    </div>
+                    <h3 className="mt-4 font-bold text-lg">{p.t}</h3>
+                    <p className="mt-1 text-sm text-white/80">{p.d}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+
+            <div className="mt-5 grid grid-cols-2 gap-4">
+              {mini.map((m, i) => (
+                <Reveal key={m.t} delay={200 + i * 70}>
+                  <div className="flex items-center gap-3 rounded-xl border border-border bg-card p-4 card-hover">
+                    <div className="h-9 w-9 shrink-0 rounded-lg grid place-items-center bg-accent/10">
+                      <m.icon className="h-4 w-4 text-accent" />
+                    </div>
+                    <div>
+                      <div className="font-semibold text-sm text-primary">{m.t}</div>
+                      <div className="text-xs text-muted-foreground">{m.d}</div>
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <Reveal delay={150}>
+          <div className="mt-10 rounded-2xl overflow-hidden shadow-lg" style={{ background: "linear-gradient(120deg, oklch(0.22 0.15 268), oklch(0.32 0.19 268))" }}>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 px-6 py-5 text-white text-center">
+              <div className="flex items-center gap-2 font-bold shrink-0">
+                <Send className="h-5 w-5 text-accent" /> Distribuição em:
+              </div>
+              <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
+                <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4 text-accent" /> Uberlândia - MG · Triângulo Mineiro</span>
+                <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4 text-accent" /> Catalão - GO</span>
+                <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4 text-accent" /> Itumbiara - GO</span>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Rastreamento ---------- */
+
+function Rastreamento() {
+  const features = [
+    "Rastreamento em tempo real",
+    "Segurança da carga",
+    "Atualizações automáticas",
+    "Atendimento 24 horas",
+  ];
+  return (
+    <section id="rastreamento" className="py-24 lg:py-32 relative overflow-hidden" style={{ background: "var(--gradient-primary)" }}>
+      <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, white 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+      <div className="pointer-events-none absolute -top-40 left-0 h-96 w-96 rounded-full bg-accent/25 blur-3xl animate-float" />
+      <div className="relative mx-auto max-w-7xl px-6 grid lg:grid-cols-2 gap-12 items-center">
+        <Reveal>
+          <div className="relative overflow-hidden rounded-3xl">
+            <img
+              src="/arte/rastreamento.jpg"
+              alt="Rastreamento de carga da LKR em tempo real"
+              loading="lazy"
+              className="w-full block"
+            />
+            {/* Vignette que funde as bordas da imagem no azul da seção */}
+            <div
+              className="pointer-events-none absolute inset-0 rounded-3xl"
+              style={{ boxShadow: "inset 0 0 60px 14px oklch(0.24 0.16 268 / 0.85)" }}
+            />
+          </div>
+        </Reveal>
+
+        <Reveal delay={150}>
+          <span className="text-accent font-semibold text-sm tracking-widest uppercase">Rastreamento</span>
+          <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-white leading-tight">
+            Acompanhe sua carga em tempo real
+          </h2>
+          <p className="mt-4 text-white/80 leading-relaxed max-w-lg">
+            Tecnologia e segurança para você acompanhar sua carga em tempo real, com total transparência e confiabilidade.
+          </p>
+
+          <div className="mt-8 rounded-2xl border border-white/15 bg-white/10 backdrop-blur-md p-6 shadow-lg">
+            <div className="grid sm:grid-cols-2 gap-x-6 gap-y-3">
+              {features.map((f) => (
+                <div key={f} className="flex items-center gap-2 text-white">
+                  <CheckCircle2 className="h-5 w-5 text-accent shrink-0" />
+                  <span className="text-sm font-medium">{f}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <a
+            href="https://wa.me/553432291736?text=Ol%C3%A1!%20Gostaria%20de%20rastrear%20minha%20carga%20com%20a%20LKR%20Servi%C3%A7os."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-8 inline-flex items-center gap-2 bg-accent text-white font-bold px-7 py-3.5 rounded-xl shadow-lg hover:-translate-y-0.5 transition-transform"
+          >
+            Rastrear Agora <ArrowRight className="h-5 w-5" />
+          </a>
+        </Reveal>
       </div>
     </section>
   );
@@ -836,9 +954,8 @@ function Footer() {
     <footer className="text-white/80" style={{ background: "linear-gradient(180deg, oklch(0.22 0.15 268), oklch(0.16 0.12 268))" }}>
       <div className="mx-auto max-w-7xl px-6 py-16 grid lg:grid-cols-4 gap-10">
         <div>
-          <div className="inline-flex rounded-xl bg-white px-5 py-4 shadow-lg">
-            <LkrLogo variant="full" className="h-20 w-auto" />
-          </div>
+          <LkrLogo variant="full" className="h-16 w-auto" />
+          <div className="h-px w-16 bg-accent/60 mt-4" />
           <p className="mt-4 inline-flex items-center gap-2 text-sm font-semibold tracking-wide text-accent">
             <span className="h-1.5 w-1.5 rounded-full bg-accent" /> Deus é fiel
           </p>
